@@ -33,7 +33,7 @@ jobs:
           cache: npm
 
       - name: Instalar dependências
-        run: npm install
+        run: npm install --include=dev
 
       - name: Construir o projeto
         run: npm run build
