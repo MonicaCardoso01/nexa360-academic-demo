@@ -35,11 +35,11 @@ jobs:
 
       - name: Instalar dependências
         run: |
-          npm install --include=dev
-          npm install --no-save vite@6.4.3
+          npm install 
+          
 
       - name: Construir o projeto
-        run: npx --yes vite@6.4.3 build
+        run: npm run build
 
       - name: Configurar GitHub Pages
         uses: actions/configure-pages@v5
