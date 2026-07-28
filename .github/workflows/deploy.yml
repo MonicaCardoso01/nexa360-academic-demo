@@ -38,8 +38,7 @@ jobs:
           npm install --include=dev
           npm install --no-save vite@6.4.3
 
-      - name: Construir NEXA360
-      - name: 
+      - name: Construir o projeto
         run: npx --yes vite@6.4.3 build
 
       - name: Configurar GitHub Pages
