@@ -1,5 +1,7 @@
 import React from "react";
 import Sidebar from "../components/Sidebar.jsx";
+import LanguageSelector from "../components/LanguageSelector.jsx";
+import { useLanguage } from "../i18n/LanguageContext.jsx";
 
 export default function AppLayout({
   user,
@@ -9,6 +11,10 @@ export default function AppLayout({
   title,
   children
 }) {
+  const { t } = useLanguage();
+  const translatedTitle = activePage ? t(`menu.${activePage}`) : title;
+  const role = t(`common.${user.profileKey}`);
+
   return (
     <main className="shell">
       <Sidebar
@@ -21,15 +27,18 @@ export default function AppLayout({
       <section className="main">
         <header className="top">
           <div>
-            <small>NEXA360 / {title}</small>
-            <h1>{title}</h1>
+            <small>NEXA360 / {translatedTitle}</small>
+            <h1>{translatedTitle}</h1>
           </div>
 
-          <div className="topUser">
+          <div className="top-actions">
+            <LanguageSelector compact />
+            <div className="topUser">
             <div className="avatar">{user.initials}</div>
             <div>
               <b>{user.name}</b>
-              <small>{user.role}</small>
+              <small>{role}</small>
+            </div>
             </div>
           </div>
         </header>

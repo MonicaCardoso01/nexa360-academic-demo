@@ -1341,3 +1341,93 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* =====================================================
+   NEXA360 — FUNDAÇÃO MULTILINGUE v1.4.3
+===================================================== */
+
+.login-language-row {
+  margin-bottom: 22px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.language-selector {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid #dce5ed;
+  border-radius: 11px;
+  background: #f6f9fb;
+}
+
+.language-selector button {
+  min-width: 38px;
+  height: 30px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 7px;
+  color: #647487;
+  background: transparent;
+  font-size: 9px;
+  font-weight: 850;
+  transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.language-selector button:hover {
+  color: #1c6c64;
+  background: #e9f5f1;
+}
+
+.language-selector button.active {
+  color: #ffffff;
+  background: linear-gradient(115deg, #286fc1, #22a573);
+  box-shadow: 0 5px 12px rgba(30, 114, 118, 0.18);
+}
+
+.language-selector.compact {
+  flex: 0 0 auto;
+}
+
+.language-selector.compact button {
+  min-width: 31px;
+  height: 26px;
+  padding: 0 6px;
+  font-size: 8px;
+}
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+html[lang="zh-CN"] body {
+  font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Inter, system-ui, sans-serif;
+}
+
+@media (max-width: 800px) {
+  .language-selector.compact {
+    max-width: 115px;
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .top {
+    height: auto;
+    min-height: 78px;
+    padding: 12px 18px;
+    gap: 12px;
+  }
+
+  .top-actions {
+    align-items: flex-end;
+    flex-direction: column-reverse;
+    gap: 7px;
+  }
+
+  .topUser {
+    display: none;
+  }
+}

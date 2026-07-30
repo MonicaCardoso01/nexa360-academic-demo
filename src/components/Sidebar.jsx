@@ -1,47 +1,54 @@
 import React from "react";
 import Logo from "./Logo.jsx";
+import { useLanguage } from "../i18n/LanguageContext.jsx";
 
 const MENU = [
-  ["command", "⌂", "Centro de Comando", false],
-  ["leads", "◎", "Leads", false],
-  ["partners", "🤝", "Parceiros", false],
-  ["opportunities", "◇", "Oportunidades", false],
-  ["contacts", "○", "Contactos", true],
-  ["tasks", "✓", "Tarefas", true],
-  ["reports", "▥", "Relatórios", true],
-  ["settings", "⚙", "Definições", true]
+  ["command", "⌂", false],
+  ["leads", "◎", false],
+  ["partners", "🤝", false],
+  ["opportunities", "◇", false],
+  ["contacts", "○", true],
+  ["tasks", "✓", true],
+  ["reports", "▥", true],
+  ["settings", "⚙", true]
 ];
 
 export default function Sidebar({ user, activePage, onNavigate, onLogout }) {
+  const { t } = useLanguage();
+  const role = t(`common.${user.profileKey}`);
+
   return (
     <aside className="sidebar">
       <Logo compact />
 
       <nav aria-label="Menu principal">
-        <p>Gestão comercial</p>
+        <p>{t("menu.section")}</p>
 
-        {MENU.map(([id, icon, label, future]) => (
+        {MENU.map(([id, icon, future]) => {
+          const label = t(`menu.${id}`);
+          return (
           <button
             type="button"
             key={id}
             className={activePage === id ? "active" : ""}
             onClick={() => !future && onNavigate(id)}
-            title={future ? `${label} — módulo futuro` : label}
+            title={future ? `${label} — ${t("common.future")}` : label}
           >
             <span>{icon}</span>
             <span>{label}</span>
-            {future && <small>Em breve</small>}
+            {future && <small>{t("common.future")}</small>}
           </button>
-        ))}
+          );
+        })}
       </nav>
 
       <div className="sideUser">
         <div className="avatar">{user.initials}</div>
         <div>
           <b>{user.name}</b>
-          <small>{user.role}</small>
+          <small>{role}</small>
         </div>
-        <button type="button" onClick={onLogout} title="Terminar sessão">↪</button>
+        <button type="button" onClick={onLogout} title={t("common.logout")}>↪</button>
       </div>
     </aside>
   );

@@ -1,2 +1,99 @@
-import React,{useState} from "react";import Logo from "../components/Logo.jsx";import {USERS} from "../data/appData.js";import {greeting} from "../utils/date.js";
-export default function LoginPage({onLogin}){const[k,setK]=useState("admin"),[name,setName]=useState(USERS.admin.name),[email,setEmail]=useState(USERS.admin.email),[pass,setPass]=useState(""),[msg,setMsg]=useState("");const p=USERS[k];function choose(n){setK(n);setName(USERS[n].name);setEmail(USERS[n].email);setPass("");setMsg("")}function submit(e){e.preventDefault();if(!name.trim())return setMsg("Por favor, indique o seu nome para continuar.");if(!email.includes("@"))return setMsg("Por favor, indique um email válido.");if(pass.length<4)return setMsg("A palavra-passe deve ter pelo menos quatro caracteres.");onLogin({...p,name:name.trim(),email:email.trim()})}return <main className="login"><section className="identity"><Logo/><div className="identityText"><p className="eyebrow light">Estratégia • Inteligência • Humanidade</p><h1>Transformando Relações em Resultados</h1><p>Uma plataforma criada para organizar oportunidades, fortalecer relações e ajudar empresas e pessoas a crescer.</p></div><div className="values"><article><span>01</span><div><b>Elegância</b><p>Clareza, equilíbrio e organização em cada detalhe.</p></div></article><article><span>02</span><div><b>Inteligência</b><p>Informação transformada em orientação e ação.</p></div></article><article><span>03</span><div><b>Humanidade</b><p>Tecnologia que respeita, acolhe e desenvolve pessoas.</p></div></article></div><footer><span>NEXA360 CRM Enterprise</span><span>Fundação v1.0</span></footer></section><section className="access"><div className="card"><header><p className="eyebrow">Acesso à plataforma</p><h2>Bem-vinda à NEXA360 CRM Enterprise</h2><p>Hoje começa mais um dia para criar oportunidades, fortalecer relações e ajudar empresas a crescer.</p></header><div className="profiles"><button type="button" className={k==="admin"?"selected":""} onClick={()=>choose("admin")}>♛ <span><b>Administradora</b><small>Visão completa da empresa</small></span></button><button type="button" className={k==="collaborator"?"selected":""} onClick={()=>choose("collaborator")}>♟ <span><b>Colaborador</b><small>Minha rotina e clientes</small></span></button></div><div className="welcome"><span>{k==="admin"?"♛":"♟"}</span><div><b>{greeting()}, {name||p.name}.</b><small>Você está entrando como {p.role}.</small></div></div><form onSubmit={submit}><label><span>Nome</span><input value={name} onChange={e=>setName(e.target.value)}/></label><label><span>Email</span><input type="email" value={email} onChange={e=>setEmail(e.target.value)}/></label><label><span>Palavra-passe</span><input type="password" value={pass} onChange={e=>setPass(e.target.value)} placeholder="Digite pelo menos 4 caracteres"/></label><div className="options"><label><input type="checkbox" defaultChecked/> Lembrar-me</label><button type="button">Esqueci a palavra-passe</button></div><button className="enter">Entrar como {p.role} →</button><p className="feedback">{msg||"Use uma palavra-passe de demonstração, como 1234."}</p></form><div className="signature"><span/><em>Excelência em evolução contínua.</em><span/></div></div></section></main>}
+import React, { useState } from "react";
+import Logo from "../components/Logo.jsx";
+import LanguageSelector from "../components/LanguageSelector.jsx";
+import { USERS } from "../data/appData.js";
+import { useLanguage } from "../i18n/LanguageContext.jsx";
+
+function greetingKey() {
+  const hour = new Date().getHours();
+  if (hour < 12) return "login.morning";
+  if (hour < 19) return "login.afternoon";
+  return "login.evening";
+}
+
+export default function LoginPage({ onLogin }) {
+  const { t } = useLanguage();
+  const [profileKey, setProfileKey] = useState("admin");
+  const [name, setName] = useState(USERS.admin.name);
+  const [email, setEmail] = useState(USERS.admin.email);
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const profile = USERS[profileKey];
+  const role = t(`common.${profileKey}`);
+
+  function choose(nextProfile) {
+    setProfileKey(nextProfile);
+    setName(USERS[nextProfile].name);
+    setEmail(USERS[nextProfile].email);
+    setPassword("");
+    setMessage("");
+  }
+
+  function submit(event) {
+    event.preventDefault();
+    if (!name.trim()) return setMessage(t("login.nameError"));
+    if (!email.includes("@")) return setMessage(t("login.emailError"));
+    if (password.length < 4) return setMessage(t("login.passwordError"));
+    onLogin({ ...profile, name: name.trim(), email: email.trim() });
+  }
+
+  return (
+    <main className="login">
+      <section className="identity">
+        <Logo />
+        <div className="identityText">
+          <p className="eyebrow light">{t("login.pillars")}</p>
+          <h1>{t("login.slogan")}</h1>
+          <p>{t("login.purpose")}</p>
+        </div>
+        <div className="values">
+          <article><span>01</span><div><b>{t("login.elegance")}</b><p>{t("login.eleganceText")}</p></div></article>
+          <article><span>02</span><div><b>{t("login.intelligence")}</b><p>{t("login.intelligenceText")}</p></div></article>
+          <article><span>03</span><div><b>{t("login.humanity")}</b><p>{t("login.humanityText")}</p></div></article>
+        </div>
+        <footer><span>NEXA360 CRM Enterprise</span><span>{t("login.foundation")}</span></footer>
+      </section>
+
+      <section className="access">
+        <div className="card">
+          <div className="login-language-row"><LanguageSelector /></div>
+          <header>
+            <p className="eyebrow">{t("login.access")}</p>
+            <h2>{t("login.welcomeTitle")}</h2>
+            <p>{t("login.welcomeText")}</p>
+          </header>
+
+          <div className="profiles">
+            <button type="button" className={profileKey === "admin" ? "selected" : ""} onClick={() => choose("admin")}>
+              ♛ <span><b>{t("common.admin")}</b><small>{t("login.adminDetail")}</small></span>
+            </button>
+            <button type="button" className={profileKey === "collaborator" ? "selected" : ""} onClick={() => choose("collaborator")}>
+              ♟ <span><b>{t("common.collaborator")}</b><small>{t("login.collaboratorDetail")}</small></span>
+            </button>
+          </div>
+
+          <div className="welcome">
+            <span>{profileKey === "admin" ? "♛" : "♟"}</span>
+            <div>
+              <b>{t(greetingKey())}, {name || profile.name}.</b>
+              <small>{t("login.enteringAs", { role })}</small>
+            </div>
+          </div>
+
+          <form onSubmit={submit}>
+            <label><span>{t("login.name")}</span><input value={name} onChange={(event) => setName(event.target.value)} /></label>
+            <label><span>{t("login.email")}</span><input type="email" value={email} onChange={(event) => setEmail(event.target.value)} /></label>
+            <label><span>{t("login.password")}</span><input type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder={t("login.passwordPlaceholder")} /></label>
+            <div className="options">
+              <label><input type="checkbox" defaultChecked /> {t("login.remember")}</label>
+              <button type="button">{t("login.forgot")}</button>
+            </div>
+            <button className="enter">{t("login.enterAs", { role })}</button>
+            <p className="feedback">{message || t("login.demo")}</p>
+          </form>
+          <div className="signature"><span /><em>{t("login.signature")}</em><span /></div>
+        </div>
+      </section>
+    </main>
+  );
+}

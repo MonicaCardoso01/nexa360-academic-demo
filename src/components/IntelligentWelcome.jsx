@@ -1,54 +1,55 @@
 import React from "react";
+import { useLanguage } from "../i18n/LanguageContext.jsx";
 
-function getGreeting() {
+function getGreetingKey() {
   const hour = new Date().getHours();
 
-  if (hour < 12) return "Bom dia";
-  if (hour < 19) return "Boa tarde";
-  return "Boa noite";
+  if (hour < 12) return "login.morning";
+  if (hour < 19) return "login.afternoon";
+  return "login.evening";
 }
 
 const priorities = [
   {
     icon: "☎",
     title: "Atlântico Export",
-    description: "Sem contacto há 18 dias",
-    recommendation: "Contactar hoje",
+    descriptionKey: "noContact18",
+    recommendationKey: "contactToday",
     tone: "blue",
   },
   {
     icon: "◷",
     title: "NordWerk GmbH",
-    description: "Reunião amanhã às 10h00",
-    recommendation: "Preparar reunião",
+    descriptionKey: "meetingTomorrow",
+    recommendationKey: "prepareMeeting",
     tone: "green",
   },
   {
     icon: "€",
     title: "Lumière Conseil",
-    description: "Acompanhamento comercial pendente",
-    recommendation: "Preparar contacto",
+    descriptionKey: "followUpPending",
+    recommendationKey: "prepareContact",
     tone: "gold",
   },
 ];
 
 export default function IntelligentWelcome({ user, onNavigate }) {
+  const { t } = useLanguage();
   const firstName = user?.name?.split(" ")[0] || "Mónica";
 
   return (
     <section className="intelligent-welcome">
       <div className="welcome-main">
         <p className="aurora-eyebrow">
-          Transformando Relações em Resultados
+          {t("command.slogan")}
         </p>
 
         <h2>
-          {getGreeting()}, {firstName}.
+          {t(getGreetingKey())}, {firstName}.
         </h2>
 
         <p className="welcome-purpose">
-          Hoje é uma excelente oportunidade para fortalecer relações
-          e criar novos resultados.
+          {t("command.purpose")}
         </p>
 
         <div className="daily-message">
@@ -56,12 +57,11 @@ export default function IntelligentWelcome({ user, onNavigate }) {
 
           <div>
             <strong>
-              Existem 3 clientes prioritários para contactar hoje.
+              {t("command.dailyStrong")}
             </strong>
 
             <p>
-              Organize o seu dia começando pelas relações com maior
-              potencial de evolução.
+              {t("command.dailyText")}
             </p>
           </div>
         </div>
@@ -79,11 +79,11 @@ export default function IntelligentWelcome({ user, onNavigate }) {
       <div className="welcome-priorities">
         <div className="priorities-heading">
           <div>
-            <p className="aurora-eyebrow">Orientação inteligente</p>
-            <h3>Prioridades de hoje</h3>
+            <p className="aurora-eyebrow">{t("command.guidance")}</p>
+            <h3>{t("command.prioritiesToday")}</h3>
           </div>
 
-          <span className="priority-count">3 ações</span>
+          <span className="priority-count">{t("command.actions")}</span>
         </div>
 
         <div className="aurora-priority-list">
@@ -96,14 +96,14 @@ export default function IntelligentWelcome({ user, onNavigate }) {
 
               <div>
                 <strong>{priority.title}</strong>
-                <p>{priority.description}</p>
-                <small>{priority.recommendation}</small>
+                <p>{t(`command.${priority.descriptionKey}`)}</p>
+                <small>{t(`command.${priority.recommendationKey}`)}</small>
               </div>
 
               <button
                 type="button"
                 onClick={() => onNavigate("partners", { partnerName: priority.title })}
-                aria-label={`Abrir ficha de ${priority.title}`}
+                aria-label={t("command.openCompany", { company: priority.title })}
               >
                 →
               </button>

@@ -2,21 +2,21 @@ import ExecutiveCharts from "../components/ExecutiveCharts.jsx";
 import IntelligentWelcome from "../components/IntelligentWelcome.jsx";
 import React from "react";
 import AppLayout from "../layouts/AppLayout.jsx";
-import { greeting, today } from "../utils/date.js";
+import { useLanguage } from "../i18n/LanguageContext.jsx";
 
 const priorities = [
-  ["red", "Atlântico Export", "Sem contacto há 18 dias", "Alta", "Retomar contacto"],
-  ["green", "Lumière Conseil", "Reunião hoje às 14h00", "Hoje", "Preparar reunião"],
-  ["blue", "NordWerk GmbH", "Proposta aguardada até amanhã", "Prazo", "Enviar proposta"]
+  ["red", "Atlântico Export", "noContact18", "high", "resumeContact"],
+  ["green", "Lumière Conseil", "meetingToday", "today", "prepareMeeting"],
+  ["blue", "NordWerk GmbH", "proposalTomorrow", "deadline", "sendProposal"]
 ];
 
-const euro = (value) => new Intl.NumberFormat("pt-PT", {
-  style: "currency",
-  currency: "EUR",
-  maximumFractionDigits: 0
-}).format(Number(value) || 0);
-
 export default function CommandCenterPage({ user, leads, opportunities, onLogout, onNavigate }) {
+  const { t, locale } = useLanguage();
+  const euro = (value) => new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: "EUR",
+    maximumFractionDigits: 0
+  }).format(Number(value) || 0);
   const admin = user.profileKey === "admin";
   const visibleOpportunities = admin
     ? opportunities
@@ -25,13 +25,15 @@ export default function CommandCenterPage({ user, leads, opportunities, onLogout
   const pipelineValue = open.reduce((sum, item) => sum + Number(item.value || 0), 0);
   const highPriority = leads.filter((item) => item.priority === "Alta" && item.status !== "Convertido").length;
   const metrics = [
-    [String(leads.filter((item) => item.status !== "Convertido" && item.status !== "Perdido").length), "Leads ativos", `${highPriority} com prioridade alta`],
-    [String(open.length), "Oportunidades abertas", `${euro(pipelineValue)} em pipeline`],
-    [String(visibleOpportunities.filter((item) => item.status === "Ganha").length), "Negócios ganhos", euro(visibleOpportunities.filter((item) => item.status === "Ganha").reduce((sum, item) => sum + Number(item.value || 0), 0))],
-    [`${Math.round(open.reduce((sum, item) => sum + Number(item.probability || 0), 0) / (open.length || 1))}%`, "Probabilidade média", "das oportunidades abertas"]
+    [String(leads.filter((item) => item.status !== "Convertido" && item.status !== "Perdido").length), t("command.activeLeads"), t("command.highPriority", { count: highPriority })],
+    [String(open.length), t("command.openOpportunities"), t("command.inPipeline", { value: euro(pipelineValue) })],
+    [String(visibleOpportunities.filter((item) => item.status === "Ganha").length), t("command.wonDeals"), euro(visibleOpportunities.filter((item) => item.status === "Ganha").reduce((sum, item) => sum + Number(item.value || 0), 0))],
+    [`${Math.round(open.reduce((sum, item) => sum + Number(item.probability || 0), 0) / (open.length || 1))}%`, t("command.averageProbability"), t("command.openOpportunityDetail")]
   ];
-  const stageCounts = ["Qualificação", "Descoberta", "Proposta", "Negociação", "Fecho"]
-    .map((stage) => [stage, open.filter((item) => item.stage === stage).length]);
+  const stageCounts = [
+    ["Qualificação", "qualification"], ["Descoberta", "discovery"], ["Proposta", "proposal"],
+    ["Negociação", "negotiation"], ["Fecho", "closing"]
+  ].map(([stage, translationKey]) => [t(`command.${translationKey}`), open.filter((item) => item.stage === stage).length]);
   const maxStageCount = Math.max(...stageCounts.map(([, count]) => count), 1);
 
   return (
@@ -40,7 +42,7 @@ export default function CommandCenterPage({ user, leads, opportunities, onLogout
       activePage="command"
       onNavigate={onNavigate}
       onLogout={onLogout}
-      title="Centro de Comando"
+      title={t("command.title")}
     >
       <div className="content">
         <IntelligentWelcome user={user} onNavigate={onNavigate} />
@@ -64,23 +66,23 @@ export default function CommandCenterPage({ user, leads, opportunities, onLogout
             <article className="panel">
               <div className="panelHead">
                 <div>
-                  <p className="eyebrow">Prioridades</p>
-                  <h2>O Meu Dia</h2>
+                  <p className="eyebrow">{t("command.priorities")}</p>
+                  <h2>{t("command.myDay")}</h2>
                 </div>
-                <button type="button">Ver todas</button>
+                <button type="button">{t("common.viewAll")}</button>
               </div>
 
-              {priorities.map(([tone, company, note, label, action]) => (
+              {priorities.map(([tone, company, noteKey, labelKey, actionKey]) => (
                 <div className="task" key={company}>
                   <i className={tone} />
-                  <div><b>{company}</b><small>{note}</small></div>
-                  <span className={tone}>{label}</span>
+                  <div><b>{company}</b><small>{t(`command.${noteKey}`)}</small></div>
+                  <span className={tone}>{t(`command.${labelKey}`)}</span>
                   <button
                     type="button"
                     onClick={() => onNavigate("partners", { partnerName: company })}
-                    aria-label={`${action}: abrir ficha de ${company}`}
+                    aria-label={t("command.openCompany", { company })}
                   >
-                    {action} →
+                    {t(`command.${actionKey}`)} →
                   </button>
                 </div>
               ))}
@@ -89,8 +91,8 @@ export default function CommandCenterPage({ user, leads, opportunities, onLogout
             <article className="panel">
               <div className="panelHead">
                 <div>
-                  <p className="eyebrow">Funil comercial</p>
-                  <h2>Pipeline de Vendas</h2>
+                  <p className="eyebrow">{t("command.salesFunnel")}</p>
+                  <h2>{t("command.salesPipeline")}</h2>
                 </div>
                 <b className="money">{euro(pipelineValue)}</b>
               </div>
@@ -102,7 +104,7 @@ export default function CommandCenterPage({ user, leads, opportunities, onLogout
                 </div>
               ))}
               <button className="dashboard-pipeline-button" type="button" onClick={() => onNavigate("opportunities")}>
-                Abrir gestão de oportunidades →
+                {t("command.openOpportunityManagement")}
               </button>
             </article>
           </div>
@@ -111,42 +113,39 @@ export default function CommandCenterPage({ user, leads, opportunities, onLogout
             <article className="insight">
               <div className="insightMark">N</div>
               <p className="eyebrow light">Insight NEXA360</p>
-              <h2>Uma decisão simples pode gerar uma grande oportunidade.</h2>
-              <p>
-                Existem cinco clientes sem contacto há mais de 15 dias.
-                Recomendamos começar pela Atlântico Export.
-              </p>
+              <h2>{t("command.insightTitle")}</h2>
+              <p>{t("command.insightText")}</p>
               <button type="button" onClick={() => onNavigate("partners")}>
-                Ver parceiros prioritários →
+                {t("command.viewPriorityPartners")}
               </button>
             </article>
 
             <article className="panel goal">
               <div className="panelHead">
                 <div>
-                  <p className="eyebrow">Objetivo mensal</p>
-                  <h2>Meta Comercial</h2>
+                  <p className="eyebrow">{t("command.monthlyGoal")}</p>
+                  <h2>{t("command.commercialGoal")}</h2>
                 </div>
                 <b>72%</b>
               </div>
               <div className="circle">
-                <div><b>72%</b><small>concluído</small></div>
+                <div><b>72%</b><small>{t("common.completed")}</small></div>
               </div>
-              <p>Faltam € 28.000 para atingir a meta deste mês.</p>
+              <p>{t("command.remainingGoal")}</p>
             </article>
 
             {admin && (
               <article className="panel team">
-                <p className="eyebrow">Visível apenas para você</p>
-                <h2>Desenvolvimento da Equipa</h2>
+                <p className="eyebrow">{t("command.adminOnly")}</p>
+                <h2>{t("command.teamDevelopment")}</h2>
                 <div className="person">
                   <div className="avatar mini">JM</div>
-                  <div><b>João Martins</b><small>Evolução positiva • 82%</small></div>
+                  <div><b>João Martins</b><small>{t("command.positiveEvolution")}</small></div>
                   <strong>↗</strong>
                 </div>
                 <div className="person">
                   <div className="avatar mini">AS</div>
-                  <div><b>Ana Silva</b><small>Preparada para novos desafios • 91%</small></div>
+                  <div><b>Ana Silva</b><small>{t("command.readyChallenges")}</small></div>
                   <strong>↗</strong>
                 </div>
               </article>
