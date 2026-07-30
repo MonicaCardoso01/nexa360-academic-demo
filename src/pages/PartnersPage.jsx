@@ -305,6 +305,7 @@ export default function PartnersPage({
   partners,
   onSave,
   onDelete,
+  initialPartnerName,
   onNavigate,
   onLogout
 }) {
@@ -312,7 +313,10 @@ export default function PartnersPage({
   const [status, setStatus] = useState("Todos");
   const [country, setCountry] = useState("Todos");
   const [priority, setPriority] = useState("Todas");
-  const [modal, setModal] = useState(null);
+  const [modal, setModal] = useState(() => {
+    const partner = partners.find((item) => item.name === initialPartnerName);
+    return partner ? { mode: "view", partner } : null;
+  });
   const canEdit = user.profileKey === "admin";
 
   const countries = useMemo(

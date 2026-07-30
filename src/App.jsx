@@ -37,6 +37,7 @@ function loadOpportunities() {
 export default function App() {
   const [user, setUser] = useState(null);
   const [activePage, setActivePage] = useState("command");
+  const [selectedPartnerName, setSelectedPartnerName] = useState(null);
   const [partners, setPartners] = useState(loadPartners);
   const [leads, setLeads] = useState(loadLeads);
   const [opportunities, setOpportunities] = useState(loadOpportunities);
@@ -48,6 +49,11 @@ export default function App() {
   function logout() {
     setUser(null);
     setActivePage("command");
+  }
+
+  function navigate(page, context = {}) {
+    setSelectedPartnerName(context.partnerName || null);
+    setActivePage(page);
   }
 
   function savePartner(partner) {
@@ -118,7 +124,7 @@ export default function App() {
   }
 
   if (activePage === "leads") {
-    return <LeadsPage user={user} leads={leads} onSave={saveLead} onDelete={deleteLead} onConvert={convertLead} onNavigate={setActivePage} onLogout={logout} />;
+    return <LeadsPage user={user} leads={leads} onSave={saveLead} onDelete={deleteLead} onConvert={convertLead} onNavigate={navigate} onLogout={logout} />;
   }
 
   if (activePage === "partners") {
@@ -128,7 +134,8 @@ export default function App() {
         partners={partners}
         onSave={savePartner}
         onDelete={deletePartner}
-        onNavigate={setActivePage}
+        initialPartnerName={selectedPartnerName}
+        onNavigate={navigate}
         onLogout={logout}
       />
     );
@@ -141,7 +148,7 @@ export default function App() {
         opportunities={opportunities}
         onSave={saveOpportunity}
         onDelete={deleteOpportunity}
-        onNavigate={setActivePage}
+        onNavigate={navigate}
         onLogout={logout}
       />
     );
@@ -153,7 +160,7 @@ export default function App() {
       leads={leads}
       opportunities={opportunities}
       onLogout={logout}
-      onNavigate={setActivePage}
+      onNavigate={navigate}
     />
   );
 }

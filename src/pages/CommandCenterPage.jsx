@@ -75,7 +75,13 @@ export default function CommandCenterPage({ user, leads, opportunities, onLogout
                   <i className={tone} />
                   <div><b>{company}</b><small>{note}</small></div>
                   <span className={tone}>{label}</span>
-                  <button type="button">{action} →</button>
+                  <button
+                    type="button"
+                    onClick={() => onNavigate("partners", { partnerName: company })}
+                    aria-label={`${action}: abrir ficha de ${company}`}
+                  >
+                    {action} →
+                  </button>
                 </div>
               ))}
             </article>
