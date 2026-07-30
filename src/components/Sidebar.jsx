@@ -5,7 +5,7 @@ const MENU = [
   ["command", "⌂", "Centro de Comando", false],
   ["leads", "◎", "Leads", false],
   ["partners", "🤝", "Parceiros", false],
-  ["opportunities", "◇", "Oportunidades", true],
+  ["opportunities", "◇", "Oportunidades", false],
   ["contacts", "○", "Contactos", true],
   ["tasks", "✓", "Tarefas", true],
   ["reports", "▥", "Relatórios", true],

@@ -2,7 +2,6 @@ import ExecutiveCharts from "../components/ExecutiveCharts.jsx";
 import IntelligentWelcome from "../components/IntelligentWelcome.jsx";
 import React from "react";
 import AppLayout from "../layouts/AppLayout.jsx";
-import { METRICS } from "../data/appData.js";
 import { greeting, today } from "../utils/date.js";
 
 const priorities = [
@@ -11,16 +10,29 @@ const priorities = [
   ["blue", "NordWerk GmbH", "Proposta aguardada até amanhã", "Prazo", "Enviar proposta"]
 ];
 
-const pipeline = [
-  ["Novos", 24, 82],
-  ["Qualificados", 15, 63],
-  ["Proposta enviada", 9, 45],
-  ["Em negociação", 6, 31],
-  ["Convertidos", 4, 20]
-];
+const euro = (value) => new Intl.NumberFormat("pt-PT", {
+  style: "currency",
+  currency: "EUR",
+  maximumFractionDigits: 0
+}).format(Number(value) || 0);
 
-export default function CommandCenterPage({ user, onLogout, onNavigate }) {
+export default function CommandCenterPage({ user, leads, opportunities, onLogout, onNavigate }) {
   const admin = user.profileKey === "admin";
+  const visibleOpportunities = admin
+    ? opportunities
+    : opportunities.filter((item) => item.owner === user.name);
+  const open = visibleOpportunities.filter((item) => item.status === "Aberta");
+  const pipelineValue = open.reduce((sum, item) => sum + Number(item.value || 0), 0);
+  const highPriority = leads.filter((item) => item.priority === "Alta" && item.status !== "Convertido").length;
+  const metrics = [
+    [String(leads.filter((item) => item.status !== "Convertido" && item.status !== "Perdido").length), "Leads ativos", `${highPriority} com prioridade alta`],
+    [String(open.length), "Oportunidades abertas", `${euro(pipelineValue)} em pipeline`],
+    [String(visibleOpportunities.filter((item) => item.status === "Ganha").length), "Negócios ganhos", euro(visibleOpportunities.filter((item) => item.status === "Ganha").reduce((sum, item) => sum + Number(item.value || 0), 0))],
+    [`${Math.round(open.reduce((sum, item) => sum + Number(item.probability || 0), 0) / (open.length || 1))}%`, "Probabilidade média", "das oportunidades abertas"]
+  ];
+  const stageCounts = ["Qualificação", "Descoberta", "Proposta", "Negociação", "Fecho"]
+    .map((stage) => [stage, open.filter((item) => item.stage === stage).length]);
+  const maxStageCount = Math.max(...stageCounts.map(([, count]) => count), 1);
 
   return (
     <AppLayout
@@ -37,7 +49,7 @@ export default function CommandCenterPage({ user, onLogout, onNavigate }) {
         
 
         <section className="metrics">
-          {METRICS[user.profileKey].map(([value, label, detail]) => (
+          {metrics.map(([value, label, detail]) => (
             <article key={label}>
               <b>{value}</b>
               <h3>{label}</h3>
@@ -74,15 +86,18 @@ export default function CommandCenterPage({ user, onLogout, onNavigate }) {
                   <p className="eyebrow">Funil comercial</p>
                   <h2>Pipeline de Vendas</h2>
                 </div>
-                <b className="money">€ 247.500</b>
+                <b className="money">{euro(pipelineValue)}</b>
               </div>
 
-              {pipeline.map(([label, value, progress]) => (
+              {stageCounts.map(([label, value]) => (
                 <div className="pipe" key={label}>
                   <div><span>{label}</span><b>{value}</b></div>
-                  <div className="bar"><span style={{ width: `${progress}%` }} /></div>
+                  <div className="bar"><span style={{ width: `${value ? Math.max(12, value / maxStageCount * 100) : 0}%` }} /></div>
                 </div>
               ))}
+              <button className="dashboard-pipeline-button" type="button" onClick={() => onNavigate("opportunities")}>
+                Abrir gestão de oportunidades →
+              </button>
             </article>
           </div>
 

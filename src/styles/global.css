@@ -1134,3 +1134,210 @@
     opacity: 1;
   }
 }
+
+/* =====================================================
+   NEXA360 — GESTÃO DE OPORTUNIDADES v1.4
+===================================================== */
+
+.opportunities-content {
+  padding-top: 26px;
+}
+
+.opportunities-hero {
+  background:
+    radial-gradient(circle at 88% -10%, rgba(88, 225, 169, 0.32), transparent 23rem),
+    linear-gradient(115deg, #082842, #0c685b);
+}
+
+.opportunity-metrics {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 13px;
+  margin: 16px 0;
+}
+
+.opportunity-metrics article {
+  min-width: 0;
+  padding: 15px 17px;
+  border: 1px solid #e2e8ef;
+  border-top: 3px solid #8192a5;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.opportunity-metrics article.metric-blue { border-top-color: #367cc7; }
+.opportunity-metrics article.metric-green { border-top-color: #22a874; }
+.opportunity-metrics article.metric-gold { border-top-color: #d59c32; }
+.opportunity-metrics article.metric-dark { border-top-color: #173f60; }
+
+.opportunity-metrics span,
+.opportunity-metrics small {
+  display: block;
+}
+
+.opportunity-metrics span {
+  color: #556578;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.opportunity-metrics strong {
+  display: block;
+  margin: 4px 0 3px;
+  overflow: hidden;
+  color: #17304a;
+  font-size: clamp(17px, 1.65vw, 25px);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.opportunity-metrics small {
+  color: #94a1ae;
+  font-size: 8px;
+}
+
+.opportunity-toolbar {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) repeat(4, minmax(125px, 155px));
+  gap: 9px;
+  margin-bottom: 16px;
+}
+
+.opportunity-toolbar select {
+  width: 100%;
+  padding: 11px 10px;
+  border: 1px solid #cbd6e2;
+  border-radius: 10px;
+  outline: none;
+  color: #425367;
+  background: #ffffff;
+  font-size: 8px;
+}
+
+.opportunities-table {
+  min-width: 1450px;
+}
+
+.opportunities-table tr.opportunity-row-aberta td:first-child {
+  border-left-color: #367cc7;
+}
+
+.opportunities-table tr.opportunity-row-ganha td:first-child {
+  border-left-color: #22a874;
+}
+
+.opportunities-table tr.opportunity-row-perdida td:first-child {
+  border-left-color: #d95560;
+}
+
+.opportunity-value {
+  color: #176e54;
+  font-size: 11px;
+}
+
+.opportunity-status,
+.stage-label {
+  display: inline-block;
+  padding: 5px 8px;
+  border-radius: 20px;
+  font-size: 7px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.opportunity-status.aberta {
+  color: #286db5;
+  background: #edf5ff;
+}
+
+.opportunity-status.ganha {
+  color: #14704f;
+  background: #dff5e9;
+}
+
+.opportunity-status.perdida {
+  color: #d04b55;
+  background: #fff0f1;
+}
+
+.stage-label {
+  color: #4b6278;
+  background: #eef2f6;
+}
+
+.stage-label.proposta {
+  color: #986a17;
+  background: #fff6dc;
+}
+
+.stage-label.negociacao {
+  color: #b25722;
+  background: #fff0e6;
+}
+
+.stage-label.fecho {
+  color: #14704f;
+  background: #dff5e9;
+}
+
+.probability {
+  width: 90px;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #edf1f5;
+}
+
+.probability span {
+  display: block;
+  height: 100%;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #2f72bf, #2caf7b);
+}
+
+.opportunity-modal {
+  width: min(980px, 100%);
+}
+
+.opportunity-detail-hero {
+  background: linear-gradient(110deg, #edf6ff, #e8f8f1);
+}
+
+.opportunity-detail-hero > strong {
+  color: #176e54;
+  font-size: 25px;
+}
+
+.dashboard-pipeline-button {
+  width: 100%;
+  margin-top: 17px;
+  padding: 10px;
+  border: 1px solid #dbe5ed;
+  border-radius: 9px;
+  color: #27649e;
+  background: #f8fbfd;
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.dashboard-pipeline-button:hover {
+  color: #ffffff;
+  background: linear-gradient(110deg, #2879c8, #229a72);
+}
+
+@media (max-width: 1200px) {
+  .opportunity-metrics {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .opportunity-toolbar {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+@media (max-width: 650px) {
+  .opportunity-metrics,
+  .opportunity-toolbar {
+    grid-template-columns: 1fr;
+  }
+}
