@@ -313,11 +313,23 @@ export default function PartnersPage({
   const [status, setStatus] = useState("Todos");
   const [country, setCountry] = useState("Todos");
   const [priority, setPriority] = useState("Todas");
+  const [relationshipPlanPartner, setRelationshipPlanPartner] =
+    useState("NordWerk GmbH");
   const [modal, setModal] = useState(() => {
     const partner = partners.find((item) => item.name === initialPartnerName);
     return partner ? { mode: "view", partner } : null;
   });
   const canEdit = user.profileKey === "admin";
+
+  function openRelationshipPlan(partnerName) {
+    setRelationshipPlanPartner(partnerName);
+    window.requestAnimationFrame(() => {
+      document.getElementById("relationship-plan")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    });
+  }
 
   const countries = useMemo(
     () => [...new Set(partners.map((partner) => partner.country))].sort(),
@@ -386,8 +398,14 @@ export default function PartnersPage({
             </button>
           )}
         </section>
-<RelationshipScore partnerName="NordWerk GmbH" />
-<RelationshipTimeline partners={partners} />
+        <RelationshipScore
+          partnerName="NordWerk GmbH"
+          onViewPlan={openRelationshipPlan}
+        />
+        <RelationshipTimeline
+          partners={partners}
+          focusPartner={relationshipPlanPartner}
+        />
         <section className="partner-metrics">
           <article><span>Todos</span><strong>{totals.all}</strong><small>relações registadas</small></article>
           <article className="metric-blue"><span>Em acompanhamento</span><strong>{totals.active}</strong><small>relações em trabalho</small></article>

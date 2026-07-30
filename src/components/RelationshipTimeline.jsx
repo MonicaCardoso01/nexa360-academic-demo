@@ -169,7 +169,7 @@ function getPartnerName(partner) {
   return partner?.name || partner?.company || "Parceiro sem nome";
 }
 
-export default function RelationshipTimeline({ partners = [] }) {
+export default function RelationshipTimeline({ partners = [], focusPartner }) {
   const partnerNames = useMemo(() => {
     const names = partners
       .map(getPartnerName)
@@ -277,13 +277,22 @@ export default function RelationshipTimeline({ partners = [] }) {
     }));
   }
 
-  const availablePartners =
-    partnerNames.length > 0
-      ? partnerNames
-      : Object.keys(INITIAL_TIMELINES);
+  const availablePartners = useMemo(
+    () =>
+      partnerNames.length > 0
+        ? partnerNames
+        : Object.keys(INITIAL_TIMELINES),
+    [partnerNames]
+  );
+
+  useEffect(() => {
+    if (focusPartner && availablePartners.includes(focusPartner)) {
+      setSelectedPartner(focusPartner);
+    }
+  }, [focusPartner, availablePartners]);
 
   return (
-    <section className="timeline-panel">
+    <section className="timeline-panel" id="relationship-plan">
       <header className="timeline-header">
         <div>
           <p className="aurora-eyebrow">História da parceria</p>

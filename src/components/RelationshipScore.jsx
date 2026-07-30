@@ -95,6 +95,7 @@ function getScoreAnalysis(score) {
 export default function RelationshipScore({
   partnerName = "NordWerk GmbH",
   metrics = DEFAULT_METRICS,
+  onViewPlan,
 }) {
   const score = useMemo(
     () => calculateRelationshipScore(metrics),
@@ -210,9 +211,14 @@ export default function RelationshipScore({
             ))}
           </div>
 
-          <button type="button" className="relationship-button">
-            Ver plano de relacionamento →
-          </button>
+      <button
+        type="button"
+        className="relationship-button"
+        onClick={() => onViewPlan?.(partnerName)}
+        aria-label={`Ver plano de relacionamento de ${partnerName}`}
+      >
+        Ver plano de relacionamento →
+      </button>
 
           <footer className="relationship-signature">
             <small>Powered by</small>
