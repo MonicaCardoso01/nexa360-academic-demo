@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { LANGUAGES, translations } from "./translations.js";
+import { moduleTranslations } from "./moduleTranslations.js";
 
 const STORAGE_KEY = "nexa360_language";
 const LanguageContext = createContext(null);
@@ -31,8 +32,10 @@ export function LanguageProvider({ children }) {
   const value = useMemo(() => {
     const locale = LANGUAGES.find((item) => item.code === language)?.locale || "pt-PT";
     const t = (key, variables) => {
-      const text = key.split(".").reduce((current, part) => current?.[part], translations[language]);
-      const fallback = key.split(".").reduce((current, part) => current?.[part], translations.pt);
+      const catalogue = { ...translations[language], ...moduleTranslations[language] };
+      const fallbackCatalogue = { ...translations.pt, ...moduleTranslations.pt };
+      const text = key.split(".").reduce((current, part) => current?.[part], catalogue);
+      const fallback = key.split(".").reduce((current, part) => current?.[part], fallbackCatalogue);
       return interpolate(text || fallback || key, variables);
     };
     return { language, locale, languages: LANGUAGES, setLanguage, t };

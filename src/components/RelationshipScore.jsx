@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import { useLanguage } from "../i18n/LanguageContext.jsx";
 import {
   PolarAngleAxis,
   PolarGrid,
@@ -97,6 +98,7 @@ export default function RelationshipScore({
   metrics = DEFAULT_METRICS,
   onViewPlan,
 }) {
+  const { t } = useLanguage();
   const score = useMemo(
     () => calculateRelationshipScore(metrics),
     [metrics]
@@ -105,30 +107,27 @@ export default function RelationshipScore({
   const analysis = getScoreAnalysis(score);
 
   const radarData = [
-    { metric: "Comunicação", value: metrics.communication },
-    { metric: "Prazos", value: metrics.deadlines },
-    { metric: "Rentabilidade", value: metrics.profitability },
-    { metric: "Crescimento", value: metrics.growth },
-    { metric: "Satisfação", value: metrics.satisfaction },
-    { metric: "Confiança", value: metrics.risk },
+    { metric: t("relationship.communication"), value: metrics.communication },
+    { metric: t("relationship.deadlines"), value: metrics.deadlines },
+    { metric: t("relationship.profitability"), value: metrics.profitability },
+    { metric: t("relationship.growth"), value: metrics.growth },
+    { metric: t("relationship.satisfaction"), value: metrics.satisfaction },
+    { metric: t("relationship.trust"), value: metrics.risk },
   ];
 
   return (
     <section className="relationship-intelligence">
       <header className="relationship-header">
         <div>
-          <p className="aurora-eyebrow">Relationship Intelligence</p>
+          <p className="aurora-eyebrow">{t("relationship.intelligence")}</p>
           <h2>{partnerName}</h2>
-          <p>
-            Avaliação integrada da qualidade, estabilidade e potencial
-            estratégico da parceria.
-          </p>
+          <p>{t("relationship.integratedAssessment")}</p>
         </div>
 
         <div className={`relationship-score ${analysis.tone}`}>
           <strong>{score}</strong>
           <span>/100</span>
-          <small>{analysis.level}</small>
+          <small>{score >= 85 ? t("relationship.excellent") : analysis.level}</small>
         </div>
       </header>
 
@@ -136,12 +135,12 @@ export default function RelationshipScore({
         <article className="relationship-radar-card">
           <div className="relationship-card-heading">
             <div>
-              <p className="aurora-eyebrow">Visão 360°</p>
-              <h3>Saúde da parceria</h3>
+              <p className="aurora-eyebrow">{t("relationship.vision")}</p>
+              <h3>{t("relationship.health")}</h3>
             </div>
 
             <span className={`health-badge ${analysis.tone}`}>
-              {analysis.level}
+              {score >= 85 ? t("relationship.excellent") : analysis.level}
             </span>
           </div>
 
@@ -166,7 +165,7 @@ export default function RelationshipScore({
                 />
 
                 <Tooltip
-                  formatter={(value) => [`${value}/100`, "Avaliação"]}
+                  formatter={(value) => [`${value}/100`, t("relationship.evaluation")]}
                   contentStyle={{
                     borderRadius: "12px",
                     border: "1px solid #dce6ee",
@@ -194,16 +193,16 @@ export default function RelationshipScore({
             Insight NEXA360
           </p>
 
-          <h3>Análise estratégica da parceria</h3>
+          <h3>{t("relationship.strategicAnalysis")}</h3>
 
           <p className="relationship-message">
-            {analysis.message}
+            {score >= 85 ? t("relationship.growthMessage") : analysis.message}
           </p>
 
           <div className="relationship-actions">
-            <strong>Recomendações</strong>
+            <strong>{t("relationship.recommendations")}</strong>
 
-            {analysis.actions.map((action) => (
+            {[t("relationship.quarterlyMeeting"), t("relationship.complementaryServices"), t("relationship.jointGrowth")].map((action) => (
               <div className="relationship-action" key={action}>
                 <span>✓</span>
                 <p>{action}</p>
@@ -215,13 +214,13 @@ export default function RelationshipScore({
         type="button"
         className="relationship-button"
         onClick={() => onViewPlan?.(partnerName)}
-        aria-label={`Ver plano de relacionamento de ${partnerName}`}
+        aria-label={`${t("relationship.viewPlan")} ${partnerName}`}
       >
-        Ver plano de relacionamento →
+        {t("relationship.viewPlan")}
       </button>
 
           <footer className="relationship-signature">
-            <small>Powered by</small>
+            <small>{t("relationship.poweredBy")}</small>
             <strong>NEXA360 Intelligence</strong>
           </footer>
         </article>
@@ -229,25 +228,25 @@ export default function RelationshipScore({
 
       <div className="relationship-metrics">
         <article>
-          <span>Comunicação</span>
+          <span>{t("relationship.communication")}</span>
           <strong>{metrics.communication}%</strong>
           <div><i style={{ width: `${metrics.communication}%` }} /></div>
         </article>
 
         <article>
-          <span>Cumprimento de prazos</span>
+          <span>{t("relationship.deadlines")}</span>
           <strong>{metrics.deadlines}%</strong>
           <div><i style={{ width: `${metrics.deadlines}%` }} /></div>
         </article>
 
         <article>
-          <span>Rentabilidade</span>
+          <span>{t("relationship.profitability")}</span>
           <strong>{metrics.profitability}%</strong>
           <div><i style={{ width: `${metrics.profitability}%` }} /></div>
         </article>
 
         <article>
-          <span>Crescimento</span>
+          <span>{t("relationship.growth")}</span>
           <strong>{metrics.growth}%</strong>
           <div><i style={{ width: `${metrics.growth}%` }} /></div>
         </article>

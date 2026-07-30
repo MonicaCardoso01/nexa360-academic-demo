@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { useLanguage } from "../i18n/LanguageContext.jsx";
 
 const INITIAL_TIMELINES = {
   "NordWerk GmbH": [
@@ -170,6 +171,7 @@ function getPartnerName(partner) {
 }
 
 export default function RelationshipTimeline({ partners = [], focusPartner }) {
+  const { t } = useLanguage();
   const partnerNames = useMemo(() => {
     const names = partners
       .map(getPartnerName)
@@ -295,18 +297,16 @@ export default function RelationshipTimeline({ partners = [], focusPartner }) {
     <section className="timeline-panel" id="relationship-plan">
       <header className="timeline-header">
         <div>
-          <p className="aurora-eyebrow">História da parceria</p>
+          <p className="aurora-eyebrow">{t("relationship.history")}</p>
 
-          <h2>Relationship Timeline</h2>
+          <h2>{t("relationship.timeline")}</h2>
 
-          <p>
-            Consulte e atualize toda a evolução da relação empresarial.
-          </p>
+          <p>{t("relationship.timelineText")}</p>
         </div>
 
         <div className="timeline-controls">
           <label>
-            <span>Parceiro em análise</span>
+            <span>{t("relationship.partnerAnalysis")}</span>
 
             <select
               value={selectedPartner}
@@ -327,22 +327,19 @@ export default function RelationshipTimeline({ partners = [], focusPartner }) {
             className="timeline-add-button"
             onClick={() => setIsAdding((current) => !current)}
           >
-            {isAdding ? "Cancelar" : "+ Novo acontecimento"}
+            {isAdding ? t("relationship.cancel") : t("relationship.addEvent")}
           </button>
         </div>
       </header>
 
       <div className="timeline-partner-summary">
         <div>
-          <small>Dossiê empresarial</small>
+          <small>{t("relationship.businessFile")}</small>
           <strong>{selectedPartner}</strong>
         </div>
 
         <span>
-          {currentTimeline.length}{" "}
-          {currentTimeline.length === 1
-            ? "acontecimento registado"
-            : "acontecimentos registados"}
+          {t(currentTimeline.length===1?"relationship.oneEvent":"relationship.events",{count:currentTimeline.length})}
         </span>
       </div>
 
@@ -354,15 +351,15 @@ export default function RelationshipTimeline({ partners = [], focusPartner }) {
           <div className="timeline-form-heading">
             <div>
               <p className="aurora-eyebrow">
-                Atualizar a memória empresarial
+                {t("relationship.updateMemory")}
               </p>
-              <h3>Novo acontecimento</h3>
+              <h3>{t("relationship.newEvent")}</h3>
             </div>
           </div>
 
           <div className="timeline-form-grid">
             <label>
-              <span>Data</span>
+              <span>{t("relationship.date")}</span>
               <input
                 type="date"
                 name="date"
@@ -372,42 +369,35 @@ export default function RelationshipTimeline({ partners = [], focusPartner }) {
             </label>
 
             <label>
-              <span>Categoria</span>
+              <span>{t("relationship.category")}</span>
               <select
                 name="category"
                 value={newEvent.category}
                 onChange={handleNewEventChange}
               >
-                <option>Comercial</option>
-                <option>Reunião</option>
-                <option>Negociação</option>
-                <option>Contrato</option>
-                <option>Operações</option>
-                <option>Financeiro</option>
-                <option>Marketing</option>
-                <option>ESG</option>
-                <option>Internacionalização</option>
-                <option>Performance</option>
+                {["Comercial","Reunião","Negociação","Contrato","Operações","Financeiro","Marketing","ESG","Internacionalização","Performance"].map((category) => (
+                  <option key={category} value={category}>{t(`relationship.categories.${category}`)}</option>
+                ))}
               </select>
             </label>
 
             <label className="timeline-form-wide">
-              <span>Título</span>
+              <span>{t("relationship.eventTitle")}</span>
               <input
                 type="text"
                 name="title"
-                placeholder="Ex.: Renovação do contrato"
+                placeholder={t("relationship.titlePlaceholder")}
                 value={newEvent.title}
                 onChange={handleNewEventChange}
               />
             </label>
 
             <label className="timeline-form-wide">
-              <span>Descrição</span>
+              <span>{t("relationship.description")}</span>
               <textarea
                 name="description"
                 rows="4"
-                placeholder="Registe o que aconteceu e por que foi importante."
+                placeholder={t("relationship.descriptionPlaceholder")}
                 value={newEvent.description}
                 onChange={handleNewEventChange}
               />
@@ -422,11 +412,11 @@ export default function RelationshipTimeline({ partners = [], focusPartner }) {
                 setIsAdding(false);
               }}
             >
-              Cancelar
+              {t("relationship.cancel")}
             </button>
 
             <button type="submit">
-              Guardar acontecimento
+              {t("relationship.saveEvent")}
             </button>
           </div>
         </form>
@@ -435,18 +425,17 @@ export default function RelationshipTimeline({ partners = [], focusPartner }) {
       <div className="timeline">
         {currentTimeline.length === 0 ? (
           <div className="timeline-empty">
-            <strong>Ainda não existem acontecimentos registados.</strong>
+            <strong>{t("relationship.noEvents")}</strong>
 
             <p>
-              Adicione o primeiro momento da história de{" "}
-              {selectedPartner}.
+              {t("relationship.addFirst",{partner:selectedPartner})}
             </p>
 
             <button
               type="button"
               onClick={() => setIsAdding(true)}
             >
-              + Registar primeiro acontecimento
+              {t("relationship.registerFirst")}
             </button>
           </div>
         ) : (
@@ -475,14 +464,14 @@ export default function RelationshipTimeline({ partners = [], focusPartner }) {
                     onClick={() =>
                       removeTimelineEvent(event.id)
                     }
-                    aria-label={`Eliminar ${event.title}`}
-                    title="Eliminar acontecimento"
+                    aria-label={`${t("relationship.deleteEvent")} ${event.title}`}
+                    title={t("relationship.deleteEvent")}
                   >
                     ×
                   </button>
                 </div>
 
-                <span>{event.category}</span>
+                <span>{t(`relationship.categories.${event.category}`)}</span>
                 <p>{event.description}</p>
               </div>
             </article>
@@ -494,7 +483,7 @@ export default function RelationshipTimeline({ partners = [], focusPartner }) {
         <span>N</span>
 
         <div>
-          <small>Memória empresarial preservada por</small>
+          <small>{t("relationship.memory")}</small>
           <strong>NEXA360 Intelligence</strong>
         </div>
       </footer>

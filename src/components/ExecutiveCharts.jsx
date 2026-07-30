@@ -1,4 +1,5 @@
 import React from "react";
+import { useLanguage } from "../i18n/LanguageContext.jsx";
 import {
   Area,
   AreaChart,
@@ -57,21 +58,29 @@ function euro(value) {
 }
 
 export default function ExecutiveCharts() {
+  const { t, locale } = useLanguage();
+  const formatEuro = (value) => new Intl.NumberFormat(locale, { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(value);
+  const translatedPipeline = pipelineData.map((item, index) => ({
+    ...item,
+    stage: [t("leads.new"), t("leads.qualified"), t("command.proposal"), t("command.negotiation"), t("command.closing")][index]
+  }));
+  const translatedDistribution = leadDistribution.map((item, index) => ({
+    ...item,
+    name: [t("leads.new"), t("leads.statuses.Contactado"), t("leads.qualified"), t("command.negotiation"), t("leads.converted")][index]
+  }));
   return (
     <section className="executive-intelligence">
       <header className="intelligence-heading">
         <div>
-          <p className="aurora-eyebrow">Inteligência empresarial</p>
-          <h2>Executive Intelligence Dashboard</h2>
-          <p>
-            Dados transformados em orientação para apoiar decisões comerciais.
-          </p>
+          <p className="aurora-eyebrow">{t("executive.intelligence")}</p>
+          <h2>{t("executive.dashboard")}</h2>
+          <p>{t("executive.description")}</p>
         </div>
 
         <div className="intelligence-summary">
-          <small>Valor em pipeline</small>
-          <strong>{euro(247500)}</strong>
-          <span>↗ 18% face ao mês anterior</span>
+          <small>{t("executive.pipelineValue")}</small>
+          <strong>{formatEuro(247500)}</strong>
+          <span>{t("executive.monthlyRise")}</span>
         </div>
       </header>
 
@@ -79,8 +88,8 @@ export default function ExecutiveCharts() {
         <article className="chart-card chart-card-large">
           <header className="chart-header">
             <div>
-              <p className="aurora-eyebrow">Evolução comercial</p>
-              <h3>Leads e clientes conquistados</h3>
+              <p className="aurora-eyebrow">{t("executive.evolution")}</p>
+              <h3>{t("executive.leadsClients")}</h3>
             </div>
 
             <span className="chart-badge positive">+18%</span>
@@ -89,7 +98,7 @@ export default function ExecutiveCharts() {
           <div className="chart-insight">
             <span>✦</span>
             <p>
-              A captação de leads mantém uma evolução positiva e sustentada.
+              {t("executive.positive")}
             </p>
           </div>
 
@@ -170,7 +179,7 @@ export default function ExecutiveCharts() {
                 <Area
                   type="monotone"
                   dataKey="clients"
-                  name="Clientes"
+                  name={t("executive.clients")}
                   stroke="#2dc98b"
                   strokeWidth={3}
                   fill="url(#clientsGradient)"
@@ -180,26 +189,23 @@ export default function ExecutiveCharts() {
           </div>
 
           <footer className="chart-conclusion">
-            <strong>Insight NEXA360</strong>
-            <p>
-              O crescimento dos clientes acompanha a evolução dos leads,
-              indicando maior consistência no processo de conversão.
-            </p>
+            <strong>{t("executive.insight")}</strong>
+            <p>{t("executive.conversion")}</p>
           </footer>
         </article>
 
         <article className="chart-card">
           <header className="chart-header">
             <div>
-              <p className="aurora-eyebrow">Funil comercial</p>
-              <h3>Pipeline por etapa</h3>
+              <p className="aurora-eyebrow">{t("executive.funnel")}</p>
+              <h3>{t("executive.stages")}</h3>
             </div>
           </header>
 
           <div className="chart-area chart-area-small">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
-                data={pipelineData}
+                data={translatedPipeline}
                 layout="vertical"
                 margin={{ top: 5, right: 20, left: 15, bottom: 0 }}
               >
@@ -235,11 +241,11 @@ export default function ExecutiveCharts() {
 
                 <Bar
                   dataKey="value"
-                  name="Oportunidades"
+                  name={t("executive.opportunities")}
                   radius={[0, 8, 8, 0]}
                   fill="url(#pipelineGradient)"
                 >
-                  {pipelineData.map((entry, index) => (
+                  {translatedPipeline.map((entry, index) => (
                     <Cell
                       key={entry.stage}
                       fill={index < 2 ? "#287fd1" : "#2dbb91"}
@@ -251,19 +257,16 @@ export default function ExecutiveCharts() {
           </div>
 
           <footer className="chart-conclusion">
-            <strong>Recomendação</strong>
-            <p>
-              Existem seis oportunidades em negociação. Reforce o
-              acompanhamento para acelerar o fecho.
-            </p>
+            <strong>{t("executive.recommendation")}</strong>
+            <p>{t("executive.negotiation")}</p>
           </footer>
         </article>
 
         <article className="chart-card">
           <header className="chart-header">
             <div>
-              <p className="aurora-eyebrow">Estado dos leads</p>
-              <h3>Distribuição comercial</h3>
+              <p className="aurora-eyebrow">{t("executive.leadStatus")}</p>
+              <h3>{t("executive.distribution")}</h3>
             </div>
           </header>
 
@@ -271,14 +274,14 @@ export default function ExecutiveCharts() {
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={leadDistribution}
+                  data={translatedDistribution}
                   dataKey="value"
                   nameKey="name"
                   innerRadius={55}
                   outerRadius={88}
                   paddingAngle={3}
                 >
-                  {leadDistribution.map((entry, index) => (
+                  {translatedDistribution.map((entry, index) => (
                     <Cell
                       key={entry.name}
                       fill={pieColors[index % pieColors.length]}
@@ -302,11 +305,8 @@ export default function ExecutiveCharts() {
           </div>
 
           <footer className="chart-conclusion">
-            <strong>Leitura estratégica</strong>
-            <p>
-              A maior concentração ainda está nas fases iniciais. Priorize a
-              qualificação dos novos contactos.
-            </p>
+            <strong>{t("executive.strategic")}</strong>
+            <p>{t("executive.qualification")}</p>
           </footer>
         </article>
       </div>
@@ -315,7 +315,7 @@ export default function ExecutiveCharts() {
         <span className="signature-symbol">N</span>
 
         <div>
-          <small>Powered by</small>
+          <small>{t("executive.poweredBy")}</small>
           <strong>NEXA360 Intelligence</strong>
         </div>
       </footer>
