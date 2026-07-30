@@ -25,14 +25,14 @@ const priorities = [
   },
   {
     icon: "€",
-    title: "Lusitana Tech",
-    description: "Proposta comercial pendente",
-    recommendation: "Valor potencial: € 18.500",
+    title: "Lumière Conseil",
+    description: "Acompanhamento comercial pendente",
+    recommendation: "Preparar contacto",
     tone: "gold",
   },
 ];
 
-export default function IntelligentWelcome({ user }) {
+export default function IntelligentWelcome({ user, onNavigate }) {
   const firstName = user?.name?.split(" ")[0] || "Mónica";
 
   return (
@@ -100,7 +100,11 @@ export default function IntelligentWelcome({ user }) {
                 <small>{priority.recommendation}</small>
               </div>
 
-              <button type="button" aria-label={`Abrir ${priority.title}`}>
+              <button
+                type="button"
+                onClick={() => onNavigate("partners", { partnerName: priority.title })}
+                aria-label={`Abrir ficha de ${priority.title}`}
+              >
                 →
               </button>
             </article>

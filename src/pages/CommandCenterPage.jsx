@@ -43,7 +43,7 @@ export default function CommandCenterPage({ user, leads, opportunities, onLogout
       title="Centro de Comando"
     >
       <div className="content">
-        <IntelligentWelcome user={user} />
+        <IntelligentWelcome user={user} onNavigate={onNavigate} />
           
           
         
