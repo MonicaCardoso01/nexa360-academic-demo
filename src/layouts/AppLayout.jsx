@@ -43,6 +43,11 @@ export default function AppLayout({
           </div>
         </header>
 
+        <div className="security-demo-banner" role="status">
+          <span>🛡</span>
+          <p><strong>{t("security.protectedDemo")}</strong> {t("security.noRealData")}</p>
+        </div>
+
         {children}
       </section>
     </main>

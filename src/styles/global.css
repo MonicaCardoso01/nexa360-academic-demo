@@ -294,6 +294,37 @@
    NEXA360 — EXECUTIVE INTELLIGENCE DASHBOARD
 ===================================================== */
 
+.security-demo-banner {
+  margin: 12px 32px 0;
+  padding: 9px 12px;
+  border: 1px solid #d9e8e2;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #526b62;
+  background: #f3faf7;
+  font-size: 8px;
+}
+
+.security-demo-banner p { margin: 0; }
+.security-demo-banner strong { color: #176d4f; }
+
+.security-login-notice {
+  margin-top: 14px;
+  padding: 11px 12px;
+  border: 1px solid #d9e5ed;
+  border-left: 3px solid #287fd1;
+  border-radius: 9px;
+  color: #617281;
+  background: #f6f9fb;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.security-login-notice strong { color: #234f72; }
+.security-login-notice p { margin: 5px 0 0; }
+
 .executive-intelligence {
   margin-top: 22px;
   padding: 25px;
@@ -670,6 +701,7 @@
 }
 
 @media (max-width: 650px) {
+  .security-demo-banner { margin: 10px 18px 0; }
   .executive-intelligence {
     padding: 17px;
   }

@@ -11,7 +11,7 @@ function greetingKey() {
   return "login.evening";
 }
 
-export default function LoginPage({ onLogin }) {
+export default function LoginPage({ onLogin, sessionExpired = false }) {
   const { t } = useLanguage();
   const [profileKey, setProfileKey] = useState("admin");
   const [name, setName] = useState(USERS.admin.name);
@@ -33,7 +33,7 @@ export default function LoginPage({ onLogin }) {
     event.preventDefault();
     if (!name.trim()) return setMessage(t("login.nameError"));
     if (!email.includes("@")) return setMessage(t("login.emailError"));
-    if (password.length < 4) return setMessage(t("login.passwordError"));
+    if (password.length < 8) return setMessage(t("login.passwordError"));
     onLogin({ ...profile, name: name.trim(), email: email.trim() });
   }
 
@@ -81,16 +81,20 @@ export default function LoginPage({ onLogin }) {
           </div>
 
           <form onSubmit={submit}>
-            <label><span>{t("login.name")}</span><input value={name} onChange={(event) => setName(event.target.value)} /></label>
-            <label><span>{t("login.email")}</span><input type="email" value={email} onChange={(event) => setEmail(event.target.value)} /></label>
-            <label><span>{t("login.password")}</span><input type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder={t("login.passwordPlaceholder")} /></label>
+            <label><span>{t("login.name")}</span><input maxLength="80" autoComplete="name" value={name} onChange={(event) => setName(event.target.value)} /></label>
+            <label><span>{t("login.email")}</span><input type="email" maxLength="160" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} /></label>
+            <label><span>{t("login.password")}</span><input type="password" minLength="8" maxLength="128" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder={t("login.passwordPlaceholder")} /></label>
             <div className="options">
               <label><input type="checkbox" defaultChecked /> {t("login.remember")}</label>
               <button type="button">{t("login.forgot")}</button>
             </div>
             <button className="enter">{t("login.enterAs", { role })}</button>
-            <p className="feedback">{message || t("login.demo")}</p>
+            <p className="feedback">{message || (sessionExpired ? t("security.sessionExpired") : t("login.demo"))}</p>
           </form>
+          <aside className="security-login-notice" role="note">
+            <strong>🛡 {t("security.demoTitle")}</strong>
+            <p>{t("security.demoText")}</p>
+          </aside>
           <div className="signature"><span /><em>{t("login.signature")}</em><span /></div>
         </div>
       </section>

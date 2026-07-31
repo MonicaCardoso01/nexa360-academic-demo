@@ -11,6 +11,7 @@ import { INITIAL_OPPORTUNITIES } from "./data/opportunities.js";
 const STORAGE_KEY = "nexa360_partners_v1";
 const LEADS_KEY = "nexa360_leads_v1";
 const OPPORTUNITIES_KEY = "nexa360_opportunities_v1";
+const SESSION_TIMEOUT_MS = 15 * 60 * 1000;
 
 function loadLeads(){
   try { const saved=localStorage.getItem(LEADS_KEY); return saved?JSON.parse(saved):INITIAL_LEADS; } catch { return INITIAL_LEADS; }
@@ -41,14 +42,37 @@ export default function App() {
   const [partners, setPartners] = useState(loadPartners);
   const [leads, setLeads] = useState(loadLeads);
   const [opportunities, setOpportunities] = useState(loadOpportunities);
+  const [sessionExpired, setSessionExpired] = useState(false);
 
   useEffect(() => { localStorage.setItem(STORAGE_KEY, JSON.stringify(partners)); }, [partners]);
   useEffect(() => { localStorage.setItem(LEADS_KEY, JSON.stringify(leads)); }, [leads]);
   useEffect(() => { localStorage.setItem(OPPORTUNITIES_KEY, JSON.stringify(opportunities)); }, [opportunities]);
 
+  useEffect(() => {
+    if (!user) return undefined;
+    let timeoutId;
+    const expireSession = () => {
+      setUser(null);
+      setActivePage("command");
+      setSessionExpired(true);
+    };
+    const resetTimeout = () => {
+      window.clearTimeout(timeoutId);
+      timeoutId = window.setTimeout(expireSession, SESSION_TIMEOUT_MS);
+    };
+    const events = ["mousedown", "keydown", "touchstart", "scroll"];
+    events.forEach((event) => window.addEventListener(event, resetTimeout, { passive: true }));
+    resetTimeout();
+    return () => {
+      window.clearTimeout(timeoutId);
+      events.forEach((event) => window.removeEventListener(event, resetTimeout));
+    };
+  }, [user]);
+
   function logout() {
     setUser(null);
     setActivePage("command");
+    setSessionExpired(false);
   }
 
   function navigate(page, context = {}) {
@@ -120,7 +144,7 @@ export default function App() {
 
 
   if (!user) {
-    return <LoginPage onLogin={setUser} />;
+    return <LoginPage sessionExpired={sessionExpired} onLogin={(nextUser) => { setSessionExpired(false); setUser(nextUser); }} />;
   }
 
   if (activePage === "leads") {
