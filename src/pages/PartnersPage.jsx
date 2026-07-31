@@ -1,6 +1,6 @@
 import RelationshipScore from "../components/RelationshipScore.jsx";
 import RelationshipTimeline from "../components/RelationshipTimeline.jsx";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import AppLayout from "../layouts/AppLayout.jsx";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { localizePartner } from "../i18n/partnerRecordTranslations.js";
@@ -28,6 +28,17 @@ const EMPTY_PARTNER = {
   notes: ""
 };
 
+const RELATIONSHIP_EVALUATIONS_KEY = "nexa360_relationship_evaluations_v1";
+
+function loadRelationshipEvaluations() {
+  try {
+    const saved = localStorage.getItem(RELATIONSHIP_EVALUATIONS_KEY);
+    return saved ? JSON.parse(saved) : {};
+  } catch {
+    return {};
+  }
+}
+
 function currency(value, locale = "pt-PT") {
   return new Intl.NumberFormat(locale, {
     style: "currency",
@@ -44,6 +55,28 @@ function StatusBadge({ status, label = status }) {
     .replaceAll(" ", "-");
 
   return <span className={`partner-status ${className}`}>{label}</span>;
+}
+
+function relationshipMetrics(partner) {
+  if (!partner) return undefined;
+
+  const statusScore = {
+    Captado: 94,
+    "Em acompanhamento": 84,
+    Novo: 72,
+    Perdido: 52
+  }[partner.status] || 70;
+  const priorityScore = { Alta: 94, Média: 80, Baixa: 64 }[partner.priority] || 72;
+  const valueScore = Math.max(55, Math.min(96, 55 + Number(partner.potentialValue || 0) / 3000));
+
+  return {
+    communication: partner.lastContact ? Math.min(96, statusScore + 3) : 58,
+    deadlines: Math.max(55, Math.min(95, statusScore - 1)),
+    profitability: Math.round(valueScore),
+    growth: priorityScore,
+    satisfaction: Math.max(50, Math.min(96, statusScore)),
+    risk: Math.max(45, Math.min(95, Math.round((statusScore + priorityScore) / 2)))
+  };
 }
 
 function PartnerModal({ partner, mode, onClose, onSave, onDelete, canEdit, t, locale, language }) {
@@ -319,11 +352,39 @@ export default function PartnersPage({
   const [priority, setPriority] = useState("Todas");
   const [relationshipPlanPartner, setRelationshipPlanPartner] =
     useState("NordWerk GmbH");
+  const [relationshipEvaluations, setRelationshipEvaluations] = useState(
+    loadRelationshipEvaluations
+  );
   const [modal, setModal] = useState(() => {
     const partner = partners.find((item) => item.name === initialPartnerName);
     return partner ? { mode: "view", partner } : null;
   });
   const canEdit = user.profileKey === "admin";
+  const relationshipPartner = partners.find(
+    (partner) => partner.name === relationshipPlanPartner
+  ) || partners[0];
+  const suggestedRelationshipMetrics = relationshipMetrics(relationshipPartner);
+  const currentRelationshipEvaluation = relationshipEvaluations[relationshipPartner?.name] || {
+    metrics: suggestedRelationshipMetrics,
+    notes: "",
+    evaluator: user.name,
+    evaluatedAt: ""
+  };
+
+  useEffect(() => {
+    localStorage.setItem(
+      RELATIONSHIP_EVALUATIONS_KEY,
+      JSON.stringify(relationshipEvaluations)
+    );
+  }, [relationshipEvaluations]);
+
+  function saveRelationshipEvaluation(evaluation) {
+    if (!relationshipPartner?.name) return;
+    setRelationshipEvaluations((current) => ({
+      ...current,
+      [relationshipPartner.name]: evaluation
+    }));
+  }
 
   function openRelationshipPlan(partnerName) {
     setRelationshipPlanPartner(partnerName);
@@ -402,12 +463,16 @@ export default function PartnersPage({
           )}
         </section>
         <RelationshipScore
-          partnerName="NordWerk GmbH"
+          partnerName={relationshipPartner?.name || relationshipPlanPartner}
+          metrics={currentRelationshipEvaluation.metrics || suggestedRelationshipMetrics}
+          evaluation={currentRelationshipEvaluation}
+          onSaveEvaluation={saveRelationshipEvaluation}
           onViewPlan={openRelationshipPlan}
         />
         <RelationshipTimeline
           partners={partners}
           focusPartner={relationshipPlanPartner}
+          onPartnerChange={setRelationshipPlanPartner}
         />
         <section className="partner-metrics">
           <article><span>{t("partners.all")}</span><strong>{totals.all}</strong><small>{t("partners.registered")}</small></article>

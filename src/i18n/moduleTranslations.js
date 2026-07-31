@@ -45,6 +45,24 @@ export const moduleTranslations = {
       saveEvent: "Guardar acontecimento", noEvents: "Ainda não existem acontecimentos registados.",
       addFirst: "Adicione o primeiro momento da história de {partner}.", registerFirst: "+ Registar primeiro acontecimento",
       deleteEvent: "Eliminar acontecimento",
+      methodology: "Metodologia NEXA360", thermometer: "Termómetro de relacionamento",
+      methodologyText: "A nota resulta de seis parâmetros transparentes e editáveis, ponderados de acordo com o seu impacto na relação empresarial.",
+      lastEvaluation: "Última avaliação", notEvaluated: "Ainda não avaliado", suggestedValues: "Valores sugeridos automaticamente",
+      editEvaluation: "Editar avaliação", transparentAssessment: "Avaliação transparente",
+      evaluatePartner: "Avaliar {partner}", scaleHelp: "Escala de 0 a 100", weight: "Peso: {value}%",
+      evaluationNotes: "Justificação da avaliação", evaluationNotesPlaceholder: "Registe evidências, acontecimentos e razões para as pontuações atribuídas.",
+      saveEvaluation: "Guardar avaliação", defaultEvaluator: "Responsável pela avaliação",
+      parameterHelp: {
+        communication: "Frequência, rapidez e qualidade das respostas.", deadlines: "Compromissos, entregas e eventuais atrasos.",
+        profitability: "Receita, margem e custo de acompanhamento.", growth: "Expansão, novos serviços e oportunidades futuras.",
+        satisfaction: "Feedback, reclamações e qualidade percebida.", risk: "Transparência, pagamentos e estabilidade da relação."
+      },
+      scoreStates: {
+        excellent: { level: "Excelente", message: "Esta parceria apresenta um elevado potencial de crescimento. Recomenda-se reforçar o relacionamento através de reuniões estratégicas trimestrais.", actions: ["Agendar reunião estratégica trimestral", "Apresentar serviços complementares", "Criar plano de crescimento conjunto"] },
+        healthy: { level: "Saudável", message: "A parceria mantém-se saudável. Existem oportunidades para aumentar o volume de negócio através de novas propostas comerciais.", actions: ["Solicitar feedback do parceiro", "Identificar novas necessidades", "Reforçar o acompanhamento comercial"] },
+        attention: { level: "Atenção", message: "Observa-se uma redução da interação comercial. Recomenda-se implementar um plano de reaproximação.", actions: ["Contactar o parceiro esta semana", "Reavaliar expectativas e necessidades", "Definir um plano de recuperação"] },
+        risk: { level: "Risco elevado", message: "Existe um risco elevado de perda desta parceria. O contacto deve ser priorizado nas próximas 48 horas.", actions: ["Realizar contacto prioritário", "Identificar a origem da insatisfação", "Criar um plano de retenção"] }
+      },
       categories: { Comercial: "Comercial", Reunião: "Reunião", Negociação: "Negociação", Contrato: "Contrato", Operações: "Operações", Financeiro: "Financeiro", Marketing: "Marketing", ESG: "ESG", Internacionalização: "Internacionalização", Performance: "Performance" }
     },
     opportunities: {
@@ -120,6 +138,24 @@ export const moduleTranslations = {
       saveEvent: "Save event", noEvents: "No events have been recorded yet.",
       addFirst: "Add the first moment in {partner}'s history.", registerFirst: "+ Record first event",
       deleteEvent: "Delete event",
+      methodology: "NEXA360 Methodology", thermometer: "Relationship thermometer",
+      methodologyText: "The score is based on six transparent, editable parameters weighted according to their impact on the business relationship.",
+      lastEvaluation: "Last assessment", notEvaluated: "Not yet assessed", suggestedValues: "Automatically suggested values",
+      editEvaluation: "Edit assessment", transparentAssessment: "Transparent assessment",
+      evaluatePartner: "Assess {partner}", scaleHelp: "Scale from 0 to 100", weight: "Weight: {value}%",
+      evaluationNotes: "Assessment justification", evaluationNotesPlaceholder: "Record evidence, events and reasons for the assigned scores.",
+      saveEvaluation: "Save assessment", defaultEvaluator: "Assessment owner",
+      parameterHelp: {
+        communication: "Frequency, speed and quality of responses.", deadlines: "Commitments, deliveries and any delays.",
+        profitability: "Revenue, margin and service cost.", growth: "Expansion, new services and future opportunities.",
+        satisfaction: "Feedback, complaints and perceived quality.", risk: "Transparency, payments and relationship stability."
+      },
+      scoreStates: {
+        excellent: { level: "Excellent", message: "This partnership has strong growth potential. We recommend strengthening the relationship through quarterly strategic meetings.", actions: ["Schedule a quarterly strategic meeting", "Present complementary services", "Create a joint growth plan"] },
+        healthy: { level: "Healthy", message: "The partnership remains healthy. There are opportunities to increase business volume through new commercial proposals.", actions: ["Request partner feedback", "Identify new requirements", "Strengthen commercial follow-up"] },
+        attention: { level: "Attention", message: "Commercial interaction has decreased. We recommend implementing a reconnection plan.", actions: ["Contact the partner this week", "Reassess expectations and requirements", "Define a recovery plan"] },
+        risk: { level: "High risk", message: "There is a high risk of losing this partnership. Contact should be prioritised within the next 48 hours.", actions: ["Make priority contact", "Identify the source of dissatisfaction", "Create a retention plan"] }
+      },
       categories: { Comercial: "Sales", Reunião: "Meeting", Negociação: "Negotiation", Contrato: "Contract", Operações: "Operations", Financeiro: "Finance", Marketing: "Marketing", ESG: "ESG", Internacionalização: "Internationalisation", Performance: "Performance" }
     },
     opportunities: {
@@ -195,6 +231,24 @@ export const moduleTranslations = {
       saveEvent: "Guardar acontecimiento", noEvents: "Todavía no hay acontecimientos registrados.",
       addFirst: "Añada el primer momento de la historia de {partner}.", registerFirst: "+ Registrar primer acontecimiento",
       deleteEvent: "Eliminar acontecimiento",
+      methodology: "Metodología NEXA360", thermometer: "Termómetro de relación",
+      methodologyText: "La puntuación se basa en seis parámetros transparentes y editables, ponderados según su impacto en la relación empresarial.",
+      lastEvaluation: "Última evaluación", notEvaluated: "Todavía no evaluado", suggestedValues: "Valores sugeridos automáticamente",
+      editEvaluation: "Editar evaluación", transparentAssessment: "Evaluación transparente",
+      evaluatePartner: "Evaluar {partner}", scaleHelp: "Escala de 0 a 100", weight: "Peso: {value}%",
+      evaluationNotes: "Justificación de la evaluación", evaluationNotesPlaceholder: "Registre evidencias, acontecimientos y motivos de las puntuaciones asignadas.",
+      saveEvaluation: "Guardar evaluación", defaultEvaluator: "Responsable de la evaluación",
+      parameterHelp: {
+        communication: "Frecuencia, rapidez y calidad de las respuestas.", deadlines: "Compromisos, entregas y posibles retrasos.",
+        profitability: "Ingresos, margen y coste de seguimiento.", growth: "Expansión, nuevos servicios y oportunidades futuras.",
+        satisfaction: "Comentarios, reclamaciones y calidad percibida.", risk: "Transparencia, pagos y estabilidad de la relación."
+      },
+      scoreStates: {
+        excellent: { level: "Excelente", message: "Esta colaboración presenta un alto potencial de crecimiento. Se recomienda reforzar la relación mediante reuniones estratégicas trimestrales.", actions: ["Programar una reunión estratégica trimestral", "Presentar servicios complementarios", "Crear un plan de crecimiento conjunto"] },
+        healthy: { level: "Saludable", message: "La colaboración se mantiene saludable. Existen oportunidades para aumentar el volumen de negocio mediante nuevas propuestas comerciales.", actions: ["Solicitar comentarios del socio", "Identificar nuevas necesidades", "Reforzar el seguimiento comercial"] },
+        attention: { level: "Atención", message: "Se observa una reducción de la interacción comercial. Se recomienda implementar un plan de acercamiento.", actions: ["Contactar con el socio esta semana", "Reevaluar expectativas y necesidades", "Definir un plan de recuperación"] },
+        risk: { level: "Riesgo elevado", message: "Existe un riesgo elevado de perder esta colaboración. El contacto debe priorizarse en las próximas 48 horas.", actions: ["Realizar un contacto prioritario", "Identificar el origen de la insatisfacción", "Crear un plan de retención"] }
+      },
       categories: { Comercial: "Comercial", Reunião: "Reunión", Negociação: "Negociación", Contrato: "Contrato", Operações: "Operaciones", Financeiro: "Finanzas", Marketing: "Marketing", ESG: "ESG", Internacionalização: "Internacionalización", Performance: "Rendimiento" }
     },
     opportunities: {
@@ -270,6 +324,24 @@ export const moduleTranslations = {
       saveEvent: "保存事件", noEvents: "尚未记录任何事件。",
       addFirst: "添加 {partner} 历史中的第一个事件。", registerFirst: "+ 记录第一个事件",
       deleteEvent: "删除事件",
+      methodology: "NEXA360 方法论", thermometer: "关系温度计",
+      methodologyText: "评分基于六个透明且可编辑的参数，并根据其对企业关系的影响进行加权。",
+      lastEvaluation: "最近评估", notEvaluated: "尚未评估", suggestedValues: "自动建议值",
+      editEvaluation: "编辑评估", transparentAssessment: "透明评估",
+      evaluatePartner: "评估 {partner}", scaleHelp: "0至100分", weight: "权重：{value}%",
+      evaluationNotes: "评估依据", evaluationNotesPlaceholder: "记录证据、事件和各项评分的原因。",
+      saveEvaluation: "保存评估", defaultEvaluator: "评估负责人",
+      parameterHelp: {
+        communication: "回复的频率、速度和质量。", deadlines: "承诺、交付及任何延误。",
+        profitability: "收入、利润率和服务成本。", growth: "扩张、新服务和未来机会。",
+        satisfaction: "反馈、投诉和感知质量。", risk: "透明度、付款情况和关系稳定性。"
+      },
+      scoreStates: {
+        excellent: { level: "优秀", message: "该合作关系具有较高的增长潜力。建议通过季度战略会议进一步加强关系。", actions: ["安排季度战略会议", "介绍补充服务", "制定联合增长计划"] },
+        healthy: { level: "健康", message: "合作关系保持健康，可通过新的商业方案进一步扩大业务规模。", actions: ["征求合作伙伴反馈", "确定新需求", "加强商业跟进"] },
+        attention: { level: "需要关注", message: "商业互动有所减少，建议实施关系恢复计划。", actions: ["本周联系合作伙伴", "重新评估期望和需求", "制定恢复计划"] },
+        risk: { level: "高风险", message: "该合作关系存在较高的流失风险，应在未来48小时内优先联系。", actions: ["进行优先联系", "确定不满原因", "制定客户保留计划"] }
+      },
       categories: { Comercial: "销售", Reunião: "会议", Negociação: "谈判", Contrato: "合同", Operações: "运营", Financeiro: "财务", Marketing: "营销", ESG: "ESG", Internacionalização: "国际化", Performance: "绩效" }
     },
     opportunities: {

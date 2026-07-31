@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import {
   PolarAngleAxis,
@@ -19,6 +19,15 @@ const DEFAULT_METRICS = {
   risk: 87,
 };
 
+const METRIC_DEFINITIONS = [
+  { key: "communication", weight: 20 },
+  { key: "deadlines", weight: 20 },
+  { key: "profitability", weight: 20 },
+  { key: "growth", weight: 15 },
+  { key: "satisfaction", weight: 15 },
+  { key: "risk", labelKey: "trust", weight: 10 },
+];
+
 function calculateRelationshipScore(metrics) {
   const weights = {
     communication: 0.2,
@@ -38,7 +47,7 @@ function calculateRelationshipScore(metrics) {
 }
 
 function getScoreAnalysis(score) {
-  if (score >= 90) {
+  if (score >= 85) {
     return {
       level: "Excelente",
       tone: "excellent",
@@ -96,15 +105,52 @@ function getScoreAnalysis(score) {
 export default function RelationshipScore({
   partnerName = "NordWerk GmbH",
   metrics = DEFAULT_METRICS,
+  evaluation,
+  onSaveEvaluation,
   onViewPlan,
 }) {
   const { t } = useLanguage();
+  const [isEditing, setIsEditing] = useState(false);
+  const [draftMetrics, setDraftMetrics] = useState(metrics);
+  const [draftNotes, setDraftNotes] = useState(evaluation?.notes || "");
+
+  useEffect(() => {
+    setIsEditing(false);
+    setDraftMetrics(metrics);
+    setDraftNotes(evaluation?.notes || "");
+  }, [partnerName]);
+
+  function beginEditing() {
+    setDraftMetrics(metrics);
+    setDraftNotes(evaluation?.notes || "");
+    setIsEditing(true);
+  }
+
+  function updateMetric(key, value) {
+    const safeValue = Math.max(0, Math.min(100, Number(value) || 0));
+    setDraftMetrics((current) => ({ ...current, [key]: safeValue }));
+  }
+
+  function saveEvaluation() {
+    onSaveEvaluation?.({
+      metrics: draftMetrics,
+      notes: draftNotes.trim(),
+      evaluator: evaluation?.evaluator || t("relationship.defaultEvaluator"),
+      evaluatedAt: new Date().toISOString().slice(0, 10),
+    });
+    setIsEditing(false);
+  }
   const score = useMemo(
     () => calculateRelationshipScore(metrics),
     [metrics]
   );
 
   const analysis = getScoreAnalysis(score);
+  const translatedAnalysis = {
+    level: t(`relationship.scoreStates.${analysis.tone}.level`),
+    message: t(`relationship.scoreStates.${analysis.tone}.message`),
+    actions: [0, 1, 2].map((index) => t(`relationship.scoreStates.${analysis.tone}.actions.${index}`))
+  };
 
   const radarData = [
     { metric: t("relationship.communication"), value: metrics.communication },
@@ -127,9 +173,87 @@ export default function RelationshipScore({
         <div className={`relationship-score ${analysis.tone}`}>
           <strong>{score}</strong>
           <span>/100</span>
-          <small>{score >= 85 ? t("relationship.excellent") : analysis.level}</small>
+          <small>{translatedAnalysis.level}</small>
         </div>
       </header>
+
+      <section className="relationship-methodology">
+        <div>
+          <p className="aurora-eyebrow">{t("relationship.methodology")}</p>
+          <h3>{t("relationship.thermometer")}</h3>
+          <p>{t("relationship.methodologyText")}</p>
+        </div>
+        <div className="relationship-evaluation-meta">
+          <span>{t("relationship.lastEvaluation")}</span>
+          <strong>{evaluation?.evaluatedAt || t("relationship.notEvaluated")}</strong>
+          <small>{evaluation?.evaluatedAt ? evaluation?.evaluator : t("relationship.suggestedValues")}</small>
+        </div>
+        <button type="button" className="secondary-button" onClick={beginEditing}>
+          {t("relationship.editEvaluation")}
+        </button>
+      </section>
+
+      {isEditing && (
+        <section className="relationship-evaluation-editor">
+          <header>
+            <div>
+              <p className="aurora-eyebrow">{t("relationship.transparentAssessment")}</p>
+              <h3>{t("relationship.evaluatePartner", { partner: partnerName })}</h3>
+            </div>
+            <span>{t("relationship.scaleHelp")}</span>
+          </header>
+
+          <div className="relationship-parameter-grid">
+            {METRIC_DEFINITIONS.map((definition) => {
+              const labelKey = definition.labelKey || definition.key;
+              return (
+                <label className="relationship-parameter" key={definition.key}>
+                  <span>
+                    <strong>{t(`relationship.${labelKey}`)}</strong>
+                    <small>{t("relationship.weight", { value: definition.weight })}</small>
+                  </span>
+                  <p>{t(`relationship.parameterHelp.${definition.key}`)}</p>
+                  <div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={draftMetrics[definition.key] || 0}
+                      onChange={(event) => updateMetric(definition.key, event.target.value)}
+                    />
+                    <input
+                      type="number"
+                      min="0"
+                      max="100"
+                      value={draftMetrics[definition.key] || 0}
+                      onChange={(event) => updateMetric(definition.key, event.target.value)}
+                    />
+                  </div>
+                </label>
+              );
+            })}
+          </div>
+
+          <label className="relationship-evaluation-notes">
+            <span>{t("relationship.evaluationNotes")}</span>
+            <textarea
+              rows="3"
+              value={draftNotes}
+              placeholder={t("relationship.evaluationNotesPlaceholder")}
+              onChange={(event) => setDraftNotes(event.target.value)}
+            />
+          </label>
+
+          <footer>
+            <button type="button" className="secondary-button" onClick={() => setIsEditing(false)}>
+              {t("relationship.cancel")}
+            </button>
+            <button type="button" className="primary-action" onClick={saveEvaluation}>
+              {t("relationship.saveEvaluation")}
+            </button>
+          </footer>
+        </section>
+      )}
 
       <div className="relationship-grid">
         <article className="relationship-radar-card">
@@ -140,7 +264,7 @@ export default function RelationshipScore({
             </div>
 
             <span className={`health-badge ${analysis.tone}`}>
-              {score >= 85 ? t("relationship.excellent") : analysis.level}
+              {translatedAnalysis.level}
             </span>
           </div>
 
@@ -196,13 +320,13 @@ export default function RelationshipScore({
           <h3>{t("relationship.strategicAnalysis")}</h3>
 
           <p className="relationship-message">
-            {score >= 85 ? t("relationship.growthMessage") : analysis.message}
+            {translatedAnalysis.message}
           </p>
 
           <div className="relationship-actions">
             <strong>{t("relationship.recommendations")}</strong>
 
-            {[t("relationship.quarterlyMeeting"), t("relationship.complementaryServices"), t("relationship.jointGrowth")].map((action) => (
+            {translatedAnalysis.actions.map((action) => (
               <div className="relationship-action" key={action}>
                 <span>✓</span>
                 <p>{action}</p>

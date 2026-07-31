@@ -171,7 +171,7 @@ function getPartnerName(partner) {
   return partner?.name || partner?.company || "Parceiro sem nome";
 }
 
-export default function RelationshipTimeline({ partners = [], focusPartner }) {
+export default function RelationshipTimeline({ partners = [], focusPartner, onPartnerChange }) {
   const { t, language, locale } = useLanguage();
   const partnerNames = useMemo(() => {
     const names = partners
@@ -311,9 +311,10 @@ export default function RelationshipTimeline({ partners = [], focusPartner }) {
 
             <select
               value={selectedPartner}
-              onChange={(event) =>
-                setSelectedPartner(event.target.value)
-              }
+              onChange={(event) => {
+                setSelectedPartner(event.target.value);
+                onPartnerChange?.(event.target.value);
+              }}
             >
               {availablePartners.map((name) => (
                 <option value={name} key={name}>
