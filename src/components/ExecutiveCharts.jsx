@@ -60,6 +60,10 @@ function euro(value) {
 export default function ExecutiveCharts() {
   const { t, locale } = useLanguage();
   const formatEuro = (value) => new Intl.NumberFormat(locale, { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(value);
+  const translatedEvolution = commercialEvolution.map((item, index) => ({
+    ...item,
+    month: new Intl.DateTimeFormat(locale, { month: "short" }).format(new Date(2026, index + 1, 1))
+  }));
   const translatedPipeline = pipelineData.map((item, index) => ({
     ...item,
     stage: [t("leads.new"), t("leads.qualified"), t("command.proposal"), t("command.negotiation"), t("command.closing")][index]
@@ -105,7 +109,7 @@ export default function ExecutiveCharts() {
           <div className="chart-area">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart
-                data={commercialEvolution}
+                data={translatedEvolution}
                 margin={{ top: 12, right: 15, left: -20, bottom: 0 }}
               >
                 <defs>

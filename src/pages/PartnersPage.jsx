@@ -433,7 +433,7 @@ export default function PartnersPage({
 
           <select value={country} onChange={(e) => setCountry(e.target.value)}>
             <option value="Todos">{t("partners.all")}</option>
-            {countries.map((item) => <option key={item}>{item}</option>)}
+            {countries.map((item) => <option key={item} value={item}>{localizePartner({ country: item }, language).country}</option>)}
           </select>
 
           <select value={priority} onChange={(e) => setPriority(e.target.value)}>
