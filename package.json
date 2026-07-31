@@ -1,7 +1,7 @@
 {
   "name": "nexa360-crm-enterprise",
   "private": true,
-  "version": "1.4.4",
+  "version": "1.4.6",
   "type": "module",
   "engines": {
     "node": ">=20.0.0",

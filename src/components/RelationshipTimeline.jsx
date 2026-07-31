@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
+import { timelineEventTranslations } from "../i18n/timelineEventTranslations.js";
 
 const INITIAL_TIMELINES = {
   "NordWerk GmbH": [
@@ -156,10 +157,10 @@ const EMPTY_EVENT = {
   description: "",
 };
 
-function formatDate(date) {
+function formatDate(date, locale) {
   if (!date) return "Data não definida";
 
-  return new Intl.DateTimeFormat("pt-PT", {
+  return new Intl.DateTimeFormat(locale, {
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -171,7 +172,7 @@ function getPartnerName(partner) {
 }
 
 export default function RelationshipTimeline({ partners = [], focusPartner }) {
-  const { t } = useLanguage();
+  const { t, language, locale } = useLanguage();
   const partnerNames = useMemo(() => {
     const names = partners
       .map(getPartnerName)
@@ -439,7 +440,11 @@ export default function RelationshipTimeline({ partners = [], focusPartner }) {
             </button>
           </div>
         ) : (
-          currentTimeline.map((event, index) => (
+          currentTimeline.map((event, index) => {
+            const translatedEvent = timelineEventTranslations[language]?.[event.id];
+            const eventTitle = translatedEvent?.[0] || event.title;
+            const eventDescription = translatedEvent?.[1] || event.description;
+            return (
             <article className="timeline-item" key={event.id}>
               <div className="timeline-left">
                 <div className="timeline-icon">
@@ -454,8 +459,8 @@ export default function RelationshipTimeline({ partners = [], focusPartner }) {
               <div className="timeline-card">
                 <div className="timeline-card-top">
                   <div>
-                    <small>{formatDate(event.date)}</small>
-                    <h3>{event.title}</h3>
+                    <small>{formatDate(event.date, locale)}</small>
+                    <h3>{eventTitle}</h3>
                   </div>
 
                   <button
@@ -464,7 +469,7 @@ export default function RelationshipTimeline({ partners = [], focusPartner }) {
                     onClick={() =>
                       removeTimelineEvent(event.id)
                     }
-                    aria-label={`${t("relationship.deleteEvent")} ${event.title}`}
+                    aria-label={`${t("relationship.deleteEvent")} ${eventTitle}`}
                     title={t("relationship.deleteEvent")}
                   >
                     ×
@@ -472,10 +477,11 @@ export default function RelationshipTimeline({ partners = [], focusPartner }) {
                 </div>
 
                 <span>{t(`relationship.categories.${event.category}`)}</span>
-                <p>{event.description}</p>
+                <p>{eventDescription}</p>
               </div>
             </article>
-          ))
+            );
+          })
         )}
       </div>
 

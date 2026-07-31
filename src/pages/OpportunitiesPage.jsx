@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import AppLayout from "../layouts/AppLayout.jsx";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
+import { localizeOpportunity } from "../i18n/opportunityRecordTranslations.js";
 import {
   OPPORTUNITY_STAGES,
   OPPORTUNITY_STATUSES
@@ -32,9 +33,10 @@ const EMPTY = {
   notes: ""
 };
 
-function OpportunityModal({ item, mode, canEdit, onClose, onSave, onDelete, t, locale }) {
+function OpportunityModal({ item, mode, canEdit, onClose, onSave, onDelete, t, locale, language }) {
   const [form, setForm] = useState(item || EMPTY);
   const editing = mode !== "view";
+  const displayForm = editing ? form : localizeOpportunity(form, language);
   const set = (key, value) => setForm((current) => ({ ...current, [key]: value }));
 
   function submit(event) {
@@ -56,7 +58,7 @@ function OpportunityModal({ item, mode, canEdit, onClose, onSave, onDelete, t, l
         <header className="modal-header">
           <div>
             <p className="eyebrow">{editing ? t("opportunities.commercialPipeline") : t("opportunities.opportunity360")}</p>
-            <h2>{mode === "new" ? t("opportunities.newOpportunity").replace("+ ", "") : mode === "edit" ? t("opportunities.editOpportunity") : form.title}</h2>
+            <h2>{mode === "new" ? t("opportunities.newOpportunity").replace("+ ", "") : mode === "edit" ? t("opportunities.editOpportunity") : displayForm.title}</h2>
           </div>
           <button className="close-button" onClick={onClose}>×</button>
         </header>
@@ -109,14 +111,14 @@ function OpportunityModal({ item, mode, canEdit, onClose, onSave, onDelete, t, l
             </section>
             <div className="detail-grid">
               <article><span>{t("opportunities.stage")}</span><strong>{t(`opportunities.stages.${form.stage}`)}</strong><p>{t("opportunities.chance",{value:form.probability})}</p></article>
-              <article><span>{t("opportunities.owner")}</span><strong>{form.owner}</strong><p>{form.service || t("opportunities.serviceMissing")}</p></article>
+              <article><span>{t("opportunities.owner")}</span><strong>{form.owner}</strong><p>{displayForm.service || t("opportunities.serviceMissing")}</p></article>
               <article><span>{t("opportunities.expectedClose")}</span><strong>{form.expectedClose || "—"}</strong><p>{t("opportunities.createdOn",{date:form.createdAt})}</p></article>
-              <article><span>{t("opportunities.nextAction")}</span><strong>{form.nextAction || t("opportunities.notDefined")}</strong><p>{form.email || t("opportunities.noEmail")}</p></article>
+              <article><span>{t("opportunities.nextAction")}</span><strong>{displayForm.nextAction || t("opportunities.notDefined")}</strong><p>{form.email || t("opportunities.noEmail")}</p></article>
             </div>
             <section className="relationship-card">
               <p className="eyebrow">{t("opportunities.commercialContext")}</p>
-              <h3>{form.title}</h3>
-              <p>{form.notes || t("opportunities.noNotes")}</p>
+              <h3>{displayForm.title}</h3>
+              <p>{displayForm.notes || t("opportunities.noNotes")}</p>
             </section>
             <footer className="modal-actions">
               {canEdit && (
@@ -146,7 +148,7 @@ export default function OpportunitiesPage({
   onNavigate,
   onLogout
 }) {
-  const { t, locale } = useLanguage();
+  const { t, locale, language } = useLanguage();
   const [search, setSearch] = useState("");
   const [stage, setStage] = useState("Todas");
   const [status, setStatus] = useState("Todos");
@@ -158,19 +160,20 @@ export default function OpportunitiesPage({
 
   const filtered = useMemo(() => {
     const query = search.toLowerCase();
-    const result = opportunities.filter((item) =>
-      (!query || [item.title, item.company, item.contactName, item.service]
+    const result = opportunities.filter((item) => {
+      const searchableItem = localizeOpportunity(item, language);
+      return (!query || [searchableItem.title, item.company, item.contactName, searchableItem.service]
         .some((value) => String(value).toLowerCase().includes(query))) &&
       (stage === "Todas" || item.stage === stage) &&
       (status === "Todos" || item.status === status) &&
       (owner === "Todos" || item.owner === owner)
-    );
+    });
     return [...result].sort((a, b) => {
       if (sort === "close-asc") return String(a.expectedClose).localeCompare(String(b.expectedClose));
       if (sort === "probability-desc") return Number(b.probability) - Number(a.probability);
       return Number(b.value) - Number(a.value);
     });
-  }, [opportunities, search, stage, status, owner, sort]);
+  }, [opportunities, search, stage, status, owner, sort, language]);
 
   const open = opportunities.filter((item) => item.status === "Aberta");
   const metrics = {
@@ -227,9 +230,11 @@ export default function OpportunitiesPage({
             <table className="partners-table opportunities-table">
               <thead><tr><th>{t("opportunities.opportunity")}</th><th>{t("opportunities.company")}</th><th>{t("opportunities.value")}</th><th>{t("opportunities.stage")}</th><th>{t("opportunities.probability")}</th><th>{t("opportunities.status")}</th><th>{t("opportunities.owner")}</th><th>{t("opportunities.expectedClose")}</th><th>{t("opportunities.nextAction")}</th><th /></tr></thead>
               <tbody>
-                {filtered.map((item) => (
+                {filtered.map((item) => {
+                  const displayItem = localizeOpportunity(item, language);
+                  return (
                   <tr key={item.id} className={`opportunity-row-${slug(item.status)}`}>
-                    <td><button className="company-link" onClick={() => setModal({ mode: "view", item })}><span className="company-avatar">{item.title.charAt(0)}</span><span><strong>{item.title}</strong><small>#{item.id}</small></span></button></td>
+                    <td><button className="company-link" onClick={() => setModal({ mode: "view", item })}><span className="company-avatar">{displayItem.title.charAt(0)}</span><span><strong>{displayItem.title}</strong><small>#{item.id}</small></span></button></td>
                     <td><strong>{item.company}</strong><small>{item.contactName}</small></td>
                     <td><strong className="opportunity-value">{money(item.value,locale)}</strong><small>{money(Number(item.value) * Number(item.probability) / 100,locale)} {t("opportunities.weighted")}</small></td>
                     <td><span className={`stage-label ${slug(item.stage)}`}>{t(`opportunities.stages.${item.stage}`)}</span></td>
@@ -237,17 +242,18 @@ export default function OpportunitiesPage({
                     <td><span className={`opportunity-status ${slug(item.status)}`}>{t(`opportunities.statuses.${item.status}`)}</span></td>
                     <td>{item.owner}</td>
                     <td><strong>{item.expectedClose || "—"}</strong><small>{t("opportunities.created",{date:item.createdAt})}</small></td>
-                    <td>{item.nextAction || t("opportunities.notDefined")}</td>
+                    <td>{displayItem.nextAction || t("opportunities.notDefined")}</td>
                     <td><div className="row-actions"><button onClick={() => setModal({ mode: "view", item })}>{t("opportunities.view")}</button>{canEdit && <button onClick={() => setModal({ mode: "edit", item })}>{t("opportunities.edit")}</button>}</div></td>
                   </tr>
-                ))}
+                  );
+                })}
               </tbody>
             </table>
           </div>
           {!filtered.length && <div className="empty-state"><strong>{t("opportunities.noneFound")}</strong><p>{t("opportunities.changeFilters")}</p></div>}
         </section>
       </div>
-      {modal && <OpportunityModal {...modal} canEdit={canEdit} onSave={onSave} onDelete={onDelete} onClose={close} t={t} locale={locale} />}
+      {modal && <OpportunityModal {...modal} canEdit={canEdit} onSave={onSave} onDelete={onDelete} onClose={close} t={t} locale={locale} language={language} />}
     </AppLayout>
   );
 }

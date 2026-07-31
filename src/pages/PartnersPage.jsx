@@ -3,6 +3,7 @@ import RelationshipTimeline from "../components/RelationshipTimeline.jsx";
 import React, { useMemo, useState } from "react";
 import AppLayout from "../layouts/AppLayout.jsx";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
+import { localizePartner } from "../i18n/partnerRecordTranslations.js";
 import {
   PARTNER_PRIORITIES,
   PARTNER_STATUSES
@@ -45,9 +46,10 @@ function StatusBadge({ status, label = status }) {
   return <span className={`partner-status ${className}`}>{label}</span>;
 }
 
-function PartnerModal({ partner, mode, onClose, onSave, onDelete, canEdit, t, locale }) {
+function PartnerModal({ partner, mode, onClose, onSave, onDelete, canEdit, t, locale, language }) {
   const [form, setForm] = useState(partner || EMPTY_PARTNER);
   const editing = mode === "edit" || mode === "new";
+  const displayForm = editing ? form : localizePartner(form, language);
   const title = mode === "new"
     ? t("partners.newPartner").replace("+ ", "")
     : mode === "edit"
@@ -206,7 +208,7 @@ function PartnerModal({ partner, mode, onClose, onSave, onDelete, canEdit, t, lo
             <section className="detail-hero">
               <div>
                 <StatusBadge status={form.status} label={t(`partners.statuses.${form.status}`)} />
-                <p>{form.city}, {form.country} • {form.sector}</p>
+                <p>{form.city}, {displayForm.country} • {displayForm.sector}</p>
               </div>
               <strong>{currency(form.potentialValue,locale)}</strong>
             </section>
@@ -225,7 +227,7 @@ function PartnerModal({ partner, mode, onClose, onSave, onDelete, canEdit, t, lo
               <article>
                 <span>{t("leads.lastContact")}</span>
                 <strong>{form.lastContact || t("partners.notContacted")}</strong>
-                <p>{form.nextAction || t("partners.noNextAction")}</p>
+                <p>{displayForm.nextAction || t("partners.noNextAction")}</p>
               </article>
               <article>
                 <span>{t("partners.website")}</span>
@@ -237,7 +239,7 @@ function PartnerModal({ partner, mode, onClose, onSave, onDelete, canEdit, t, lo
             <section className="relationship-card">
               <p className="eyebrow">{t("partners.relationship")}</p>
               <h3>{t("partners.knowledge")}</h3>
-              <p>{form.relationship || t("partners.noPreferences")}</p>
+              <p>{displayForm.relationship || t("partners.noPreferences")}</p>
             </section>
 
             <section className="partner-insight">
@@ -252,17 +254,17 @@ function PartnerModal({ partner, mode, onClose, onSave, onDelete, canEdit, t, lo
                       : t("partners.insightActive")}
                 </h3>
                 <p>
-                  {form.nextAction
-                    ? t("leads.recommendedAction",{action:form.nextAction})
+                  {displayForm.nextAction
+                    ? t("leads.recommendedAction",{action:displayForm.nextAction})
                     : t("partners.recommendation")}
                 </p>
               </div>
             </section>
 
-            {form.notes && (
+            {displayForm.notes && (
               <section className="notes-card">
                 <p className="eyebrow">{t("leads.notes")}</p>
-                <p>{form.notes}</p>
+                <p>{displayForm.notes}</p>
               </section>
             )}
 
@@ -310,7 +312,7 @@ export default function PartnersPage({
   onNavigate,
   onLogout
 }) {
-  const { t, locale } = useLanguage();
+  const { t, locale, language } = useLanguage();
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("Todos");
   const [country, setCountry] = useState("Todos");
@@ -342,11 +344,13 @@ export default function PartnersPage({
     const term = search.trim().toLowerCase();
 
     return partners.filter((partner) => {
+      const searchablePartner = localizePartner(partner, language);
       const matchesSearch = !term || [
         partner.name,
         partner.contactName,
         partner.email,
-        partner.sector
+        searchablePartner.sector,
+        searchablePartner.country
       ].some((value) => String(value || "").toLowerCase().includes(term));
 
       return matchesSearch
@@ -354,7 +358,7 @@ export default function PartnersPage({
         && (country === "Todos" || partner.country === country)
         && (priority === "Todas" || partner.priority === priority);
     });
-  }, [partners, search, status, country, priority]);
+  }, [partners, search, status, country, priority, language]);
 
   const totals = {
     all: partners.length,
@@ -464,7 +468,9 @@ export default function PartnersPage({
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((partner) => (
+                {filtered.map((partner) => {
+                  const displayPartner = localizePartner(partner, language);
+                  return (
                   <tr key={partner.id} className={`partner-row ${partner.status.toLowerCase().replaceAll(" ", "-")}`}>
                     <td>
                       <button
@@ -475,7 +481,7 @@ export default function PartnersPage({
                         <span className="company-avatar">{partner.name.charAt(0)}</span>
                         <span>
                           <strong>{partner.name}</strong>
-                          <small>{partner.sector}</small>
+                          <small>{displayPartner.sector}</small>
                         </span>
                       </button>
                     </td>
@@ -483,7 +489,7 @@ export default function PartnersPage({
                       <strong>{partner.contactName}</strong>
                       <small>{partner.email}</small>
                     </td>
-                    <td><strong>{partner.country}</strong><small>{partner.city}</small></td>
+                    <td><strong>{displayPartner.country}</strong><small>{partner.city}</small></td>
                     <td>{partner.manager}</td>
                     <td>{currency(partner.potentialValue,locale)}</td>
                     <td><StatusBadge status={partner.status} label={t(`partners.statuses.${partner.status}`)} /></td>
@@ -507,7 +513,8 @@ export default function PartnersPage({
                       </div>
                     </td>
                   </tr>
-                ))}
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -531,6 +538,7 @@ export default function PartnersPage({
           onClose={openEditFromView}
           t={t}
           locale={locale}
+          language={language}
         />
       )}
     </AppLayout>

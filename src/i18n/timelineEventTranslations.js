@@ -1,0 +1,53 @@
+export const timelineEventTranslations = {
+  en: {
+    "nordwerk-1": ["First contact", "First contact made during an international trade fair."],
+    "nordwerk-2": ["First meeting", "Online meeting to present the company and identify requirements."],
+    "nordwerk-3": ["Proposal sent", "A personalised commercial proposal was sent."],
+    "nordwerk-4": ["Contract signed", "The annual contract was approved by the partner."],
+    "nordwerk-5": ["First delivery", "The delivery was completed within the agreed deadline."],
+    "nordwerk-6": ["Partnership growth", "Purchase volume increased by 18%."],
+    "atlantico-1": ["First contact", "Initial contact made through a business referral."],
+    "atlantico-2": ["In-person meeting", "Services were presented and international opportunities identified."],
+    "atlantico-3": ["Proposal under review", "A commercial support proposal was sent to management."],
+    "lumiere-1": ["Contact through LinkedIn", "The first approach was made with the sales manager."],
+    "lumiere-2": ["Teams meeting", "Consulting and internationalisation requirements were analysed."],
+    "lumiere-3": ["Project approved", "The consulting project for expansion into the Portuguese market was approved."],
+    "iberia-1": ["Sales prospecting", "The company was identified as a potential partner in the food sector."],
+    "iberia-2": ["Exploratory meeting", "Distribution channels in Portugal and Spain were discussed."],
+    "bella-1": ["First contact", "An institutional presentation was sent to the Italian company."]
+  },
+  es: {
+    "nordwerk-1": ["Primer contacto", "Primer contacto realizado durante una feria internacional."],
+    "nordwerk-2": ["Primera reunión", "Reunión en línea para presentar la empresa e identificar las necesidades."],
+    "nordwerk-3": ["Propuesta enviada", "Se envió una propuesta comercial personalizada."],
+    "nordwerk-4": ["Contrato firmado", "El socio aprobó el contrato anual."],
+    "nordwerk-5": ["Primera entrega", "La entrega se realizó dentro del plazo acordado."],
+    "nordwerk-6": ["Crecimiento de la colaboración", "El volumen de compras aumentó un 18 %."],
+    "atlantico-1": ["Primer contacto", "Contacto inicial realizado mediante una recomendación empresarial."],
+    "atlantico-2": ["Reunión presencial", "Se presentaron los servicios y se identificaron oportunidades internacionales."],
+    "atlantico-3": ["Propuesta en análisis", "Se envió a la dirección una propuesta de acompañamiento comercial."],
+    "lumiere-1": ["Contacto a través de LinkedIn", "El primer acercamiento se realizó con la responsable comercial."],
+    "lumiere-2": ["Reunión por Teams", "Se analizaron las necesidades de consultoría e internacionalización."],
+    "lumiere-3": ["Proyecto aprobado", "Se aprobó el proyecto de consultoría para la expansión en el mercado portugués."],
+    "iberia-1": ["Prospección comercial", "La empresa fue identificada como posible socia en el sector alimentario."],
+    "iberia-2": ["Reunión exploratoria", "Se debatieron los canales de distribución en Portugal y España."],
+    "bella-1": ["Primer contacto", "Se envió una presentación institucional a la empresa italiana."]
+  },
+  zh: {
+    "nordwerk-1": ["首次联系", "在一次国际贸易展会上进行了首次联系。"],
+    "nordwerk-2": ["首次会议", "通过线上会议介绍公司并了解需求。"],
+    "nordwerk-3": ["已发送方案", "已发送个性化商业方案。"],
+    "nordwerk-4": ["合同已签署", "合作伙伴批准了年度合同。"],
+    "nordwerk-5": ["首次交付", "交付已在约定期限内完成。"],
+    "nordwerk-6": ["合作关系增长", "采购量增长了18%。"],
+    "atlantico-1": ["首次联系", "通过企业推荐进行了首次联系。"],
+    "atlantico-2": ["线下会议", "介绍了服务并确定了国际业务机会。"],
+    "atlantico-3": ["方案审核中", "已向管理层发送商业支持方案。"],
+    "lumiere-1": ["通过 LinkedIn 联系", "首次与销售负责人进行了沟通。"],
+    "lumiere-2": ["Teams 会议", "分析了咨询和国际化需求。"],
+    "lumiere-3": ["项目已批准", "面向葡萄牙市场扩张的咨询项目已获批准。"],
+    "iberia-1": ["销售开发", "该公司被确定为食品行业的潜在合作伙伴。"],
+    "iberia-2": ["探索性会议", "讨论了葡萄牙和西班牙的分销渠道。"],
+    "bella-1": ["首次联系", "已向这家意大利公司发送企业介绍。"]
+  }
+};
