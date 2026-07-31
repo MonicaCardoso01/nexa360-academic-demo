@@ -1,6 +1,6 @@
 import ExecutiveCharts from "../components/ExecutiveCharts.jsx";
 import IntelligentWelcome from "../components/IntelligentWelcome.jsx";
-import React from "react";
+import React, { useState } from "react";
 import AppLayout from "../layouts/AppLayout.jsx";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 
@@ -10,8 +10,22 @@ const priorities = [
   ["blue", "NordWerk GmbH", "proposalTomorrow", "deadline", "sendProposal"]
 ];
 
+const MONTHLY_TARGET_KEY = "nexa360_monthly_sales_target_v1";
+
+function loadMonthlyTarget() {
+  try {
+    const saved = Number(localStorage.getItem(MONTHLY_TARGET_KEY));
+    return saved > 0 ? saved : 100000;
+  } catch {
+    return 100000;
+  }
+}
+
 export default function CommandCenterPage({ user, leads, opportunities, onLogout, onNavigate }) {
   const { t, locale } = useLanguage();
+  const [monthlyTarget, setMonthlyTarget] = useState(loadMonthlyTarget);
+  const [targetDraft, setTargetDraft] = useState(monthlyTarget);
+  const [editingTarget, setEditingTarget] = useState(false);
   const euro = (value) => new Intl.NumberFormat(locale, {
     style: "currency",
     currency: "EUR",
@@ -23,6 +37,27 @@ export default function CommandCenterPage({ user, leads, opportunities, onLogout
     : opportunities.filter((item) => item.owner === user.name);
   const open = visibleOpportunities.filter((item) => item.status === "Aberta");
   const pipelineValue = open.reduce((sum, item) => sum + Number(item.value || 0), 0);
+  const now = new Date();
+  const monthlyWonValue = visibleOpportunities
+    .filter((item) => {
+      if (item.status !== "Ganha") return false;
+      const dateValue = item.expectedClose || item.createdAt;
+      if (!dateValue) return false;
+      const date = new Date(`${dateValue}T12:00:00`);
+      return !Number.isNaN(date.getTime())
+        && date.getFullYear() === now.getFullYear()
+        && date.getMonth() === now.getMonth();
+    })
+    .reduce((sum, item) => sum + Number(item.value || 0), 0);
+  const goalProgress = Math.min(100, Math.round(monthlyWonValue / monthlyTarget * 100));
+  const remainingGoal = Math.max(0, monthlyTarget - monthlyWonValue);
+
+  function saveMonthlyTarget() {
+    const nextTarget = Math.max(1, Number(targetDraft) || 0);
+    setMonthlyTarget(nextTarget);
+    localStorage.setItem(MONTHLY_TARGET_KEY, String(nextTarget));
+    setEditingTarget(false);
+  }
   const highPriority = leads.filter((item) => item.priority === "Alta" && item.status !== "Convertido").length;
   const metrics = [
     [String(leads.filter((item) => item.status !== "Convertido" && item.status !== "Perdido").length), t("command.activeLeads"), t("command.highPriority", { count: highPriority })],
@@ -126,12 +161,35 @@ export default function CommandCenterPage({ user, leads, opportunities, onLogout
                   <p className="eyebrow">{t("command.monthlyGoal")}</p>
                   <h2>{t("command.commercialGoal")}</h2>
                 </div>
-                <b>72%</b>
+                <b>{goalProgress}%</b>
               </div>
-              <div className="circle">
-                <div><b>72%</b><small>{t("common.completed")}</small></div>
+              <div className="goal-values">
+                <span>{t("command.wonThisMonth")}</span>
+                <strong>{euro(monthlyWonValue)} / {euro(monthlyTarget)}</strong>
               </div>
-              <p>{t("command.remainingGoal")}</p>
+              <div className="circle" style={{ background: `conic-gradient(#1ca26d 0 ${goalProgress}%, #e8edf2 ${goalProgress}% 100%)` }}>
+                <div><b>{goalProgress}%</b><small>{t("common.completed")}</small></div>
+              </div>
+              <p>{remainingGoal > 0
+                ? t("command.remainingGoal", { value: euro(remainingGoal) })
+                : t("command.goalReached")}</p>
+              {admin && !editingTarget && (
+                <button className="goal-edit-button" type="button" onClick={() => { setTargetDraft(monthlyTarget); setEditingTarget(true); }}>
+                  {t("command.editMonthlyTarget")}
+                </button>
+              )}
+              {admin && editingTarget && (
+                <div className="goal-editor">
+                  <label>
+                    <span>{t("command.monthlyTargetValue")}</span>
+                    <input type="number" min="1" step="1000" value={targetDraft} onChange={(event) => setTargetDraft(event.target.value)} />
+                  </label>
+                  <div>
+                    <button type="button" onClick={() => setEditingTarget(false)}>{t("command.cancelTarget")}</button>
+                    <button type="button" onClick={saveMonthlyTarget}>{t("command.saveTarget")}</button>
+                  </div>
+                </div>
+              )}
             </article>
 
             {admin && (
@@ -152,7 +210,7 @@ export default function CommandCenterPage({ user, leads, opportunities, onLogout
             )}
           </div>
         </section>
-        <ExecutiveCharts />
+        <ExecutiveCharts leads={leads} opportunities={visibleOpportunities} />
       </div>
     </AppLayout>
   );
