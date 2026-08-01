@@ -7,7 +7,7 @@ const MENU = [
   ["leads", "◎", false],
   ["partners", "🤝", false],
   ["opportunities", "◇", false],
-  ["contacts", "○", true],
+  ["contacts", "◉", false],
   ["tasks", "✓", true],
   ["reports", "▥", true],
   ["settings", "⚙", true]

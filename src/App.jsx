@@ -4,6 +4,7 @@ import CommandCenterPage from "./pages/CommandCenterPage.jsx";
 import PartnersPage from "./pages/PartnersPage.jsx";
 import LeadsPage from "./pages/LeadsPage.jsx";
 import OpportunitiesPage from "./pages/OpportunitiesPage.jsx";
+import ContactsPage from "./pages/ContactsPage.jsx";
 import { INITIAL_LEADS } from "./data/leads.js";
 import { INITIAL_PARTNERS } from "./data/partners.js";
 import { INITIAL_OPPORTUNITIES } from "./data/opportunities.js";
@@ -11,6 +12,7 @@ import { INITIAL_OPPORTUNITIES } from "./data/opportunities.js";
 const STORAGE_KEY = "nexa360_partners_v1";
 const LEADS_KEY = "nexa360_leads_v1";
 const OPPORTUNITIES_KEY = "nexa360_opportunities_v1";
+const CONTACTS_KEY = "nexa360_contacts_v1";
 const SESSION_TIMEOUT_MS = 15 * 60 * 1000;
 
 function loadLeads(){
@@ -37,6 +39,16 @@ function loadOpportunities() {
   }
 }
 
+function loadContacts() {
+  try {
+    const saved = localStorage.getItem(CONTACTS_KEY);
+    const parsed = saved ? JSON.parse(saved) : null;
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
 function persistRecords(key, records) {
   try {
     localStorage.setItem(key, JSON.stringify(records));
@@ -54,6 +66,7 @@ export default function App() {
   const [partners, setPartners] = useState(loadPartners);
   const [leads, setLeads] = useState(loadLeads);
   const [opportunities, setOpportunities] = useState(loadOpportunities);
+  const [contacts, setContacts] = useState(loadContacts);
   const [sessionExpired, setSessionExpired] = useState(false);
 
   useEffect(() => {
@@ -180,6 +193,35 @@ export default function App() {
     });
   }
 
+  function saveContact(contact) {
+    if (contact.originType === "lead") {
+      const lead = leads.find((item) => item.id === contact.originId);
+      if (lead) saveLead({ ...lead, name: contact.name, company: contact.company, role: contact.role, email: contact.email, phone: contact.phone, country: contact.country, city: contact.city, owner: contact.owner, notes: contact.notes });
+      return;
+    }
+    if (contact.originType === "partner") {
+      const partner = partners.find((item) => item.id === contact.originId);
+      if (partner) savePartner({ ...partner, contactName: contact.name, name: contact.company, sector: contact.role, email: contact.email, phone: contact.phone, country: contact.country, city: contact.city, manager: contact.owner, notes: contact.notes });
+      return;
+    }
+    setContacts((current) => {
+      const exists = current.some((item) => item.id === contact.id);
+      const next = exists
+        ? current.map((item) => item.id === contact.id ? { ...contact, originType: "contact" } : item)
+        : [{ ...contact, id: Date.now(), originType: "contact" }, ...current];
+      persistRecords(CONTACTS_KEY, next);
+      return next;
+    });
+  }
+
+  function deleteContact(id) {
+    setContacts((current) => {
+      const next = current.filter((item) => item.id !== id);
+      persistRecords(CONTACTS_KEY, next);
+      return next;
+    });
+  }
+
 
   if (!user) {
     return <LoginPage sessionExpired={sessionExpired} onLogin={(nextUser) => { setSessionExpired(false); setUser(nextUser); }} />;
@@ -214,6 +256,10 @@ export default function App() {
         onLogout={logout}
       />
     );
+  }
+
+  if (activePage === "contacts") {
+    return <ContactsPage user={user} leads={leads} partners={partners} contacts={contacts} onSave={saveContact} onDelete={deleteContact} onNavigate={navigate} onLogout={logout} />;
   }
 
   return (

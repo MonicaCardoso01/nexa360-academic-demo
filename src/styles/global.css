@@ -402,6 +402,39 @@
   line-height: 1.5;
 }
 
+.contact-toolbar {
+  margin-bottom: 16px;
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) 190px;
+  gap: 10px;
+}
+
+.contact-toolbar select {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #cbd6e2;
+  border-radius: 10px;
+  color: #425367;
+  background: #fff;
+  font-size: 9px;
+}
+
+.contacts-table { min-width: 1120px; }
+
+.contact-source-badge {
+  display: inline-block;
+  padding: 5px 8px;
+  border-radius: 20px;
+  color: #335f87;
+  background: #eaf3fb;
+  font-size: 7px;
+  font-weight: 800;
+}
+
+.contact-source-badge.partner { color: #17704e; background: #e7f7ef; }
+.contact-source-badge.contact { color: #735d9c; background: #f2edfa; }
+.contact-link-note { margin: 12px 0 0; padding: 9px 11px; border-left: 3px solid #287fd1; color: #587085; background: #f2f7fb; font-size: 8px; }
+
 .executive-intelligence {
   margin-top: 22px;
   padding: 25px;
@@ -781,6 +814,7 @@
   .security-demo-banner { margin: 10px 18px 0; }
   .communication-buttons { grid-template-columns: 1fr; }
   .communication-card { margin: 12px 14px; }
+  .contact-toolbar { grid-template-columns: 1fr; }
   .executive-intelligence {
     padding: 17px;
   }
