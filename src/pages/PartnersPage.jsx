@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import AppLayout from "../layouts/AppLayout.jsx";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { localizePartner } from "../i18n/partnerRecordTranslations.js";
+import CommunicationActions from "../components/CommunicationActions.jsx";
 import {
   PARTNER_PRIORITIES,
   PARTNER_STATUSES
@@ -268,6 +269,15 @@ function PartnerModal({ partner, mode, onClose, onSave, onDelete, canEdit, t, lo
                 <p>{t("partners.centralised")}</p>
               </article>
             </div>
+
+            <CommunicationActions
+              entityType="partner"
+              entityId={form.id}
+              name={form.contactName}
+              company={form.name}
+              email={form.email}
+              phone={form.phone}
+            />
 
             <section className="relationship-card">
               <p className="eyebrow">{t("partners.relationship")}</p>

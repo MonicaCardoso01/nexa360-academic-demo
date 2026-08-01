@@ -3,6 +3,7 @@ import AppLayout from "../layouts/AppLayout.jsx";
 import {LEAD_PRIORITIES,LEAD_SOURCES,LEAD_STATUSES} from "../data/leads.js";
 import {useLanguage} from "../i18n/LanguageContext.jsx";
 import {localizeLead} from "../i18n/leadRecordTranslations.js";
+import CommunicationActions from "../components/CommunicationActions.jsx";
 
 const EMPTY={name:"",company:"",role:"",email:"",phone:"",country:"Portugal",city:"",source:"Website",interest:"",status:"Novo",priority:"Média",owner:"Mónica Cardoso",createdAt:new Date().toISOString().slice(0,10),lastContact:"",nextAction:"",notes:""};
 const slug=(v)=>v.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replaceAll(" ","-");
@@ -42,6 +43,7 @@ function LeadModal({item,mode,onClose,onSave,onDelete,onConvert,canEdit,t,langua
   </form>:<div className="partner-detail">
    <section className="detail-hero"><div><span className={`lead-status ${slug(form.status)}`}>{statusLabel(form.status)}</span><p>{form.company} • {displayForm.role||t("leads.roleMissing")}</p></div><strong>{priorityLabel(form.priority)}</strong></section>
    <div className="detail-grid"><article><span>{t("leads.contact")}</span><strong>{form.email||t("leads.noEmail")}</strong><p>{form.phone||t("leads.noPhone")}</p></article><article><span>{t("leads.location")}</span><strong>{form.city||"—"}</strong><p>{displayForm.country}</p></article><article><span>{t("leads.owner")}</span><strong>{form.owner}</strong><p>{t("leads.originLabel",{source:sourceLabel(form.source)})}</p></article><article><span>{t("leads.nextAction")}</span><strong>{displayForm.nextAction||t("leads.notDefined")}</strong><p>{t("leads.lastContactLabel",{date:form.lastContact||"—"})}</p></article></div>
+   <CommunicationActions entityType="lead" entityId={form.id} name={form.name} company={form.company} email={form.email} phone={form.phone} />
    <section className="relationship-card"><p className="eyebrow">{t("leads.commercialInterest")}</p><h3>{displayForm.interest||t("leads.notSpecified")}</h3><p>{displayForm.notes||t("leads.noNotes")}</p></section>
    <section className="partner-insight"><div className="insightMark">N</div><div><p className="eyebrow light">{t("leads.insight")}</p><h3>{form.status==="Perdido"?t("leads.insightLost"):form.status==="Convertido"?t("leads.insightConverted"):t("leads.insightActive")}</h3><p>{displayForm.nextAction?t("leads.recommendedAction",{action:displayForm.nextAction}):t("leads.defineAction")}</p></div></section>
    <footer className="modal-actions">{canEdit&&<><button className="danger-button" onClick={()=>{if(confirm(t("leads.deleteConfirm",{name:form.name}))){onDelete(form.id);onClose();}}}>{t("leads.delete")}</button>{form.status!=="Convertido"&&<button className="secondary-button" onClick={()=>{onConvert(form.id);onClose();}}>{t("leads.convert")}</button>}<button className="primary-action" onClick={()=>onClose("edit",form)}>{t("leads.editLeadLower")}</button></>}</footer>
