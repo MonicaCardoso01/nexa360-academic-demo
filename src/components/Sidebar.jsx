@@ -10,7 +10,7 @@ const MENU = [
   ["contacts", "◉", false],
   ["tasks", "✓", false],
   ["reports", "▥", false],
-  ["settings", "⚙", true]
+  ["settings", "⚙", false]
 ];
 
 export default function Sidebar({ user, activePage, onNavigate, onLogout }) {
