@@ -2,6 +2,7 @@ import React from "react";
 import Sidebar from "../components/Sidebar.jsx";
 import LanguageSelector from "../components/LanguageSelector.jsx";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
+import UserAvatar from "../components/UserAvatar.jsx";
 
 export default function AppLayout({
   user,
@@ -34,7 +35,7 @@ export default function AppLayout({
           <div className="top-actions">
             <LanguageSelector compact />
             <div className="topUser">
-            <div className="avatar">{user.initials}</div>
+            <UserAvatar name={user.name} initials={user.initials} />
             <div>
               <b>{user.name}</b>
               <small>{role}</small>

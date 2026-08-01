@@ -1,6 +1,7 @@
 import React from "react";
 import Logo from "./Logo.jsx";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
+import UserAvatar from "./UserAvatar.jsx";
 
 const MENU = [
   ["command", "⌂", false],
@@ -43,7 +44,7 @@ export default function Sidebar({ user, activePage, onNavigate, onLogout }) {
       </nav>
 
       <div className="sideUser">
-        <div className="avatar">{user.initials}</div>
+        <UserAvatar name={user.name} initials={user.initials} />
         <div>
           <b>{user.name}</b>
           <small>{role}</small>

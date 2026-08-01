@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">Símbolo NEXA360</title>
+  <defs>
+    <linearGradient id="bg" x1="12" y1="8" x2="116" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#347FE8"/><stop offset=".52" stop-color="#198EB1"/><stop offset="1" stop-color="#21B979"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="38" y1="28" x2="91" y2="99" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9FFF0"/>
+    </linearGradient>
+  </defs>
+  <rect x="6" y="6" width="116" height="116" rx="29" fill="url(#bg)"/>
+  <path d="M38 91V37c0-5 6-7 10-3l33 42V37c0-4 3-7 7-7s7 3 7 7v54c0 5-6 7-10 3L52 52v39c0 4-3 7-7 7s-7-3-7-7Z" fill="url(#shine)"/>
+  <ellipse cx="64" cy="64" rx="52" ry="21" fill="none" stroke="#FFFFFF" stroke-opacity=".72" stroke-width="3" transform="rotate(-35 64 64)"/>
+  <circle cx="105" cy="36" r="5" fill="#8FFFC8"/>
+</svg>

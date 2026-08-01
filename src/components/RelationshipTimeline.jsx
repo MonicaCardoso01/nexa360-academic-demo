@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import BrandSymbol from "./BrandSymbol.jsx";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { timelineEventTranslations } from "../i18n/timelineEventTranslations.js";
 
@@ -487,7 +488,7 @@ export default function RelationshipTimeline({ partners = [], focusPartner, onPa
       </div>
 
       <footer className="timeline-intelligence-footer">
-        <span>N</span>
+        <BrandSymbol className="timeline-brand-symbol" />
 
         <div>
           <small>{t("relationship.memory")}</small>

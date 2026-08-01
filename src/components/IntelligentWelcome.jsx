@@ -1,4 +1,5 @@
 import React from "react";
+import BrandSymbol from "./BrandSymbol.jsx";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 
 function getGreetingKey() {
@@ -67,7 +68,7 @@ export default function IntelligentWelcome({ user, onNavigate }) {
         </div>
 
         <footer className="intelligence-signature">
-          <span className="signature-symbol">N</span>
+          <BrandSymbol className="signature-symbol" />
 
           <div>
             <small>Powered by</small>
@@ -97,15 +98,16 @@ export default function IntelligentWelcome({ user, onNavigate }) {
               <div>
                 <strong>{priority.title}</strong>
                 <p>{t(`command.${priority.descriptionKey}`)}</p>
-                <small>{t(`command.${priority.recommendationKey}`)}</small>
               </div>
 
               <button
                 type="button"
+                className="aurora-action-button"
                 onClick={() => onNavigate("partners", { partnerName: priority.title })}
                 aria-label={t("command.openCompany", { company: priority.title })}
               >
-                →
+                <span>{t(`command.${priority.recommendationKey}`)}</span>
+                <i aria-hidden="true">→</i>
               </button>
             </article>
           ))}

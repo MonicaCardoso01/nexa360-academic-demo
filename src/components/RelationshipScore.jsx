@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import BrandSymbol from "./BrandSymbol.jsx";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import {
   PolarAngleAxis,
@@ -311,7 +312,7 @@ export default function RelationshipScore({
         </article>
 
         <article className="relationship-analysis-card">
-          <div className="relationship-ai-mark">N</div>
+          <BrandSymbol className="relationship-ai-mark" />
 
           <p className="aurora-eyebrow">
             Insight NEXA360

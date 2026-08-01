@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import BrandSymbol from "./BrandSymbol.jsx";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import {
   Area,
@@ -253,7 +254,7 @@ export default function ExecutiveCharts({ leads = [], opportunities = [] }) {
         </article>
       </div>
 
-      <footer className="dashboard-signature"><span className="signature-symbol">N</span><div><small>{t("executive.poweredBy")}</small><strong>NEXA360 Intelligence</strong></div></footer>
+      <footer className="dashboard-signature"><BrandSymbol className="signature-symbol" /><div><small>{t("executive.poweredBy")}</small><strong>NEXA360 Intelligence</strong></div></footer>
     </section>
   );
 }

@@ -1,4 +1,5 @@
 import RelationshipScore from "../components/RelationshipScore.jsx";
+import BrandSymbol from "../components/BrandSymbol.jsx";
 import RelationshipTimeline from "../components/RelationshipTimeline.jsx";
 import React, { useEffect, useMemo, useState } from "react";
 import AppLayout from "../layouts/AppLayout.jsx";
@@ -286,7 +287,7 @@ function PartnerModal({ partner, mode, onClose, onSave, onDelete, canEdit, t, lo
             </section>
 
             <section className="partner-insight">
-              <div className="insightMark">N</div>
+              <BrandSymbol className="insightMark" />
               <div>
                 <p className="eyebrow light">{t("leads.insight")}</p>
                 <h3>

@@ -1,4 +1,6 @@
 import ExecutiveCharts from "../components/ExecutiveCharts.jsx";
+import BrandSymbol from "../components/BrandSymbol.jsx";
+import UserAvatar from "../components/UserAvatar.jsx";
 import IntelligentWelcome from "../components/IntelligentWelcome.jsx";
 import React, { useState } from "react";
 import AppLayout from "../layouts/AppLayout.jsx";
@@ -114,10 +116,42 @@ export default function CommandCenterPage({ user, leads, opportunities, onLogout
                   <span className={tone}>{t(`command.${labelKey}`)}</span>
                   <button
                     type="button"
+                    className="priority-action-button"
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "10px",
+                      minHeight: "38px",
+                      padding: "5px 6px 5px 14px",
+                      border: "1px solid #b9ddd7",
+                      borderRadius: "999px",
+                      color: "#145f70",
+                      background: "linear-gradient(110deg, #edf7ff, #e7f8ef)",
+                      boxShadow: "0 5px 14px rgba(22, 91, 103, .12)",
+                      fontSize: "11px",
+                      fontWeight: 800,
+                      whiteSpace: "nowrap"
+                    }}
                     onClick={() => onNavigate("partners", { partnerName: company })}
                     aria-label={t("command.openCompany", { company })}
                   >
-                    {t(`command.${actionKey}`)} →
+                    <span>{t(`command.${actionKey}`)}</span>
+                    <i
+                      aria-hidden="true"
+                      style={{
+                        display: "grid",
+                        width: "28px",
+                        height: "28px",
+                        placeItems: "center",
+                        borderRadius: "50%",
+                        color: "#ffffff",
+                        background: "linear-gradient(135deg, #2e7bd4, #20ad78)",
+                        fontSize: "15px",
+                        fontStyle: "normal",
+                        boxShadow: "0 3px 8px rgba(31, 123, 130, .25)"
+                      }}
+                    >→</i>
                   </button>
                 </div>
               ))}
@@ -146,7 +180,7 @@ export default function CommandCenterPage({ user, leads, opportunities, onLogout
 
           <div className="small">
             <article className="insight">
-              <div className="insightMark">N</div>
+              <BrandSymbol className="insightMark" />
               <p className="eyebrow light">Insight NEXA360</p>
               <h2>{t("command.insightTitle")}</h2>
               <p>{t("command.insightText")}</p>
@@ -197,12 +231,12 @@ export default function CommandCenterPage({ user, leads, opportunities, onLogout
                 <p className="eyebrow">{t("command.adminOnly")}</p>
                 <h2>{t("command.teamDevelopment")}</h2>
                 <div className="person">
-                  <div className="avatar mini">JM</div>
+                  <UserAvatar name="João Martins" initials="JM" mini />
                   <div><b>João Martins</b><small>{t("command.positiveEvolution")}</small></div>
                   <strong>↗</strong>
                 </div>
                 <div className="person">
-                  <div className="avatar mini">AS</div>
+                  <UserAvatar name="Ana Silva" initials="AS" mini />
                   <div><b>Ana Silva</b><small>{t("command.readyChallenges")}</small></div>
                   <strong>↗</strong>
                 </div>

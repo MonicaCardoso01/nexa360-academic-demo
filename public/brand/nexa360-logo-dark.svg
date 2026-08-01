@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 128" role="img" aria-labelledby="title">
+ <title id="title">NEXA360 CRM Enterprise</title><defs><linearGradient id="b" x1="5" y1="4" x2="119" y2="124"><stop stop-color="#347FE8"/><stop offset="1" stop-color="#20B979"/></linearGradient></defs>
+ <rect x="6" y="6" width="116" height="116" rx="29" fill="url(#b)"/><path d="M38 91V37c0-5 6-7 10-3l33 42V37c0-4 3-7 7-7s7 3 7 7v54c0 5-6 7-10 3L52 52v39c0 4-3 7-7 7s-7-3-7-7Z" fill="#fff"/><ellipse cx="64" cy="64" rx="52" ry="21" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="3" transform="rotate(-35 64 64)"/><circle cx="105" cy="36" r="5" fill="#91FFD0"/>
+ <text x="145" y="73" fill="#102D46" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="52" font-weight="800" letter-spacing="1">NEXA<tspan fill="#21A976">360</tspan></text><text x="148" y="101" fill="#607789" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="14" font-weight="700" letter-spacing="5">CRM ENTERPRISE</text>
+</svg>
