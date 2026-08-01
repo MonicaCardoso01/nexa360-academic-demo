@@ -14,13 +14,14 @@ const OPPORTUNITIES_KEY = "nexa360_opportunities_v1";
 const SESSION_TIMEOUT_MS = 15 * 60 * 1000;
 
 function loadLeads(){
-  try { const saved=localStorage.getItem(LEADS_KEY); return saved?JSON.parse(saved):INITIAL_LEADS; } catch { return INITIAL_LEADS; }
+  try { const saved=localStorage.getItem(LEADS_KEY); const parsed=saved?JSON.parse(saved):null; return Array.isArray(parsed)?parsed:INITIAL_LEADS; } catch { return INITIAL_LEADS; }
 }
 
 function loadPartners() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? JSON.parse(saved) : INITIAL_PARTNERS;
+    const parsed = saved ? JSON.parse(saved) : null;
+    return Array.isArray(parsed) ? parsed : INITIAL_PARTNERS;
   } catch {
     return INITIAL_PARTNERS;
   }
@@ -29,9 +30,20 @@ function loadPartners() {
 function loadOpportunities() {
   try {
     const saved = localStorage.getItem(OPPORTUNITIES_KEY);
-    return saved ? JSON.parse(saved) : INITIAL_OPPORTUNITIES;
+    const parsed = saved ? JSON.parse(saved) : null;
+    return Array.isArray(parsed) ? parsed : INITIAL_OPPORTUNITIES;
   } catch {
     return INITIAL_OPPORTUNITIES;
+  }
+}
+
+function persistRecords(key, records) {
+  try {
+    localStorage.setItem(key, JSON.stringify(records));
+    return true;
+  } catch (error) {
+    console.error(`NEXA360 storage failure for ${key}`, error);
+    return false;
   }
 }
 
@@ -43,10 +55,6 @@ export default function App() {
   const [leads, setLeads] = useState(loadLeads);
   const [opportunities, setOpportunities] = useState(loadOpportunities);
   const [sessionExpired, setSessionExpired] = useState(false);
-
-  useEffect(() => { localStorage.setItem(STORAGE_KEY, JSON.stringify(partners)); }, [partners]);
-  useEffect(() => { localStorage.setItem(LEADS_KEY, JSON.stringify(leads)); }, [leads]);
-  useEffect(() => { localStorage.setItem(OPPORTUNITIES_KEY, JSON.stringify(opportunities)); }, [opportunities]);
 
   useEffect(() => {
     if (!user) return undefined;
@@ -83,26 +91,44 @@ export default function App() {
   function savePartner(partner) {
     setPartners((current) => {
       const exists = current.some((item) => item.id === partner.id);
-      if (exists) {
-        return current.map((item) => item.id === partner.id ? partner : item);
-      }
-      return [{ ...partner, id: Date.now() }, ...current];
+      const next = exists
+        ? current.map((item) => item.id === partner.id ? partner : item)
+        : [{ ...partner, id: Date.now() }, ...current];
+      persistRecords(STORAGE_KEY, next);
+      return next;
     });
   }
 
   function deletePartner(id) {
-    setPartners((current) => current.filter((item) => item.id !== id));
+    setPartners((current) => {
+      const next = current.filter((item) => item.id !== id);
+      persistRecords(STORAGE_KEY, next);
+      return next;
+    });
   }
   function saveLead(lead){
-    setLeads(current=>current.some(x=>x.id===lead.id)?current.map(x=>x.id===lead.id?lead:x):[{...lead,id:Date.now()},...current]);
+    setLeads((current) => {
+      const next = current.some((item) => item.id === lead.id)
+        ? current.map((item) => item.id === lead.id ? lead : item)
+        : [{ ...lead, id: Date.now() }, ...current];
+      persistRecords(LEADS_KEY, next);
+      return next;
+    });
   }
-  function deleteLead(id){ setLeads(current=>current.filter(x=>x.id!==id)); }
+  function deleteLead(id){
+    setLeads((current) => {
+      const next = current.filter((item) => item.id !== id);
+      persistRecords(LEADS_KEY, next);
+      return next;
+    });
+  }
   function convertLead(id) {
     const lead = leads.find((item) => item.id === id);
     if (!lead) return;
     const alreadyExists = opportunities.some((item) => item.leadId === id);
     if (!alreadyExists) {
-      setOpportunities((current) => [{
+      setOpportunities((current) => {
+        const next = [{
         id: Date.now(),
         leadId: lead.id,
         title: `${lead.interest || "Nova oportunidade"} — ${lead.company}`,
@@ -119,27 +145,39 @@ export default function App() {
         createdAt: new Date().toISOString().slice(0, 10),
         nextAction: "Qualificar oportunidade e estimar valor",
         notes: `Oportunidade criada automaticamente a partir do lead #${lead.id}. ${lead.notes || ""}`.trim()
-      }, ...current]);
+        }, ...current];
+        persistRecords(OPPORTUNITIES_KEY, next);
+        return next;
+      });
     }
-    setLeads((current) => current.map((item) =>
-      item.id === id
+    setLeads((current) => {
+      const next = current.map((item) => item.id === id
         ? { ...item, status: "Convertido", nextAction: "Acompanhar oportunidade comercial" }
         : item
-    ));
+      );
+      persistRecords(LEADS_KEY, next);
+      return next;
+    });
     setActivePage("opportunities");
   }
 
   function saveOpportunity(opportunity) {
     setOpportunities((current) => {
       const exists = current.some((item) => item.id === opportunity.id);
-      return exists
+      const next = exists
         ? current.map((item) => item.id === opportunity.id ? opportunity : item)
         : [{ ...opportunity, id: Date.now() }, ...current];
+      persistRecords(OPPORTUNITIES_KEY, next);
+      return next;
     });
   }
 
   function deleteOpportunity(id) {
-    setOpportunities((current) => current.filter((item) => item.id !== id));
+    setOpportunities((current) => {
+      const next = current.filter((item) => item.id !== id);
+      persistRecords(OPPORTUNITIES_KEY, next);
+      return next;
+    });
   }
 
 
