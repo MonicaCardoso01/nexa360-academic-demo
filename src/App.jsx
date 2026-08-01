@@ -20,15 +20,23 @@ const CONTACTS_KEY = "nexa360_contacts_v1";
 const TASKS_KEY = "nexa360_tasks_v1";
 const SESSION_TIMEOUT_MS = 15 * 60 * 1000;
 
+function normalizeRecords(key, records) {
+  const original = JSON.stringify(records);
+  const normalized = original.replaceAll("Mónica Cardoso", "Mônica Cardoso");
+  const next = JSON.parse(normalized);
+  if (normalized !== original) localStorage.setItem(key, normalized);
+  return next;
+}
+
 function loadLeads(){
-  try { const saved=localStorage.getItem(LEADS_KEY); const parsed=saved?JSON.parse(saved):null; return Array.isArray(parsed)?parsed:INITIAL_LEADS; } catch { return INITIAL_LEADS; }
+  try { const saved=localStorage.getItem(LEADS_KEY); const parsed=saved?JSON.parse(saved):null; return normalizeRecords(LEADS_KEY, Array.isArray(parsed)?parsed:INITIAL_LEADS); } catch { return INITIAL_LEADS; }
 }
 
 function loadPartners() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     const parsed = saved ? JSON.parse(saved) : null;
-    return Array.isArray(parsed) ? parsed : INITIAL_PARTNERS;
+    return normalizeRecords(STORAGE_KEY, Array.isArray(parsed) ? parsed : INITIAL_PARTNERS);
   } catch {
     return INITIAL_PARTNERS;
   }
@@ -38,7 +46,7 @@ function loadOpportunities() {
   try {
     const saved = localStorage.getItem(OPPORTUNITIES_KEY);
     const parsed = saved ? JSON.parse(saved) : null;
-    return Array.isArray(parsed) ? parsed : INITIAL_OPPORTUNITIES;
+    return normalizeRecords(OPPORTUNITIES_KEY, Array.isArray(parsed) ? parsed : INITIAL_OPPORTUNITIES);
   } catch {
     return INITIAL_OPPORTUNITIES;
   }
@@ -48,9 +56,9 @@ function loadContacts() {
   try {
     const saved = localStorage.getItem(CONTACTS_KEY);
     const parsed = saved ? JSON.parse(saved) : null;
-    return Array.isArray(parsed) ? parsed : INITIAL_TASKS;
+    return normalizeRecords(CONTACTS_KEY, Array.isArray(parsed) ? parsed : []);
   } catch {
-    return INITIAL_TASKS;
+    return [];
   }
 }
 
@@ -58,9 +66,9 @@ function loadTasks() {
   try {
     const saved = localStorage.getItem(TASKS_KEY);
     const parsed = saved ? JSON.parse(saved) : null;
-    return Array.isArray(parsed) ? parsed : [];
+    return normalizeRecords(TASKS_KEY, Array.isArray(parsed) ? parsed : INITIAL_TASKS);
   } catch {
-    return [];
+    return INITIAL_TASKS;
   }
 }
 

@@ -4,6 +4,16 @@ import LanguageSelector from "../components/LanguageSelector.jsx";
 import { USERS } from "../data/appData.js";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 
+const PROFILE_KEY = "nexa360_profile_v1";
+function savedAdmin() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(PROFILE_KEY) || "null");
+    return saved?.name && saved?.email ? saved : null;
+  } catch {
+    return null;
+  }
+}
+
 function greetingKey() {
   const hour = new Date().getHours();
   if (hour < 12) return "login.morning";
@@ -13,9 +23,10 @@ function greetingKey() {
 
 export default function LoginPage({ onLogin, sessionExpired = false }) {
   const { t } = useLanguage();
+  const storedAdmin = savedAdmin();
   const [profileKey, setProfileKey] = useState("admin");
-  const [name, setName] = useState(USERS.admin.name);
-  const [email, setEmail] = useState(USERS.admin.email);
+  const [name, setName] = useState(storedAdmin?.name || USERS.admin.name);
+  const [email, setEmail] = useState(storedAdmin?.email || USERS.admin.email);
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const profile = USERS[profileKey];
@@ -23,8 +34,9 @@ export default function LoginPage({ onLogin, sessionExpired = false }) {
 
   function choose(nextProfile) {
     setProfileKey(nextProfile);
-    setName(USERS[nextProfile].name);
-    setEmail(USERS[nextProfile].email);
+    const saved = nextProfile === "admin" ? savedAdmin() : null;
+    setName(saved?.name || USERS[nextProfile].name);
+    setEmail(saved?.email || USERS[nextProfile].email);
     setPassword("");
     setMessage("");
   }

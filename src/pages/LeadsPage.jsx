@@ -5,7 +5,7 @@ import {useLanguage} from "../i18n/LanguageContext.jsx";
 import {localizeLead} from "../i18n/leadRecordTranslations.js";
 import CommunicationActions from "../components/CommunicationActions.jsx";
 
-const EMPTY={name:"",company:"",role:"",email:"",phone:"",country:"Portugal",city:"",source:"Website",interest:"",status:"Novo",priority:"Média",owner:"Mónica Cardoso",createdAt:new Date().toISOString().slice(0,10),lastContact:"",nextAction:"",notes:""};
+const EMPTY={name:"",company:"",role:"",email:"",phone:"",country:"Portugal",city:"",source:"Website",interest:"",status:"Novo",priority:"Média",owner:"Mônica Cardoso",createdAt:new Date().toISOString().slice(0,10),lastContact:"",nextAction:"",notes:""};
 const slug=(v)=>v.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replaceAll(" ","-");
 
 function LeadModal({item,mode,onClose,onSave,onDelete,onConvert,canEdit,t,language}){

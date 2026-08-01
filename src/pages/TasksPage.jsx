@@ -3,7 +3,7 @@ import AppLayout from "../layouts/AppLayout.jsx";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 
 const TODAY = () => new Date().toISOString().slice(0, 10);
-const EMPTY = { id:null, title:"", description:"", dueDate:TODAY(), priority:"medium", status:"pending", owner:"Mónica Cardoso", relatedType:"none", relatedId:"", relatedLabel:"", notes:"" };
+const EMPTY = { id:null, title:"", description:"", dueDate:TODAY(), priority:"medium", status:"pending", owner:"Mônica Cardoso", relatedType:"none", relatedId:"", relatedLabel:"", notes:"" };
 
 function recordsFor(type, leads, partners, opportunities) {
   if (type === "lead") return leads.map((x) => ({ id:x.id, label:`${x.name} — ${x.company}` }));

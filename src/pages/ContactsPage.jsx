@@ -3,7 +3,7 @@ import AppLayout from "../layouts/AppLayout.jsx";
 import CommunicationActions from "../components/CommunicationActions.jsx";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 
-const EMPTY = { id: null, originType: "contact", name: "", company: "", role: "", email: "", phone: "", country: "Portugal", city: "", owner: "Mónica Cardoso", notes: "" };
+const EMPTY = { id: null, originType: "contact", name: "", company: "", role: "", email: "", phone: "", country: "Portugal", city: "", owner: "Mônica Cardoso", notes: "" };
 
 function contactKey(contact) {
   const email = String(contact.email || "").trim().toLowerCase();

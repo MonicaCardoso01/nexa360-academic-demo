@@ -26,7 +26,7 @@ const EMPTY = {
   probability: 25,
   stage: "Qualificação",
   status: "Aberta",
-  owner: "Mónica Cardoso",
+  owner: "Mônica Cardoso",
   expectedClose: "",
   createdAt: today(),
   nextAction: "",
