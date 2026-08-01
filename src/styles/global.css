@@ -1893,6 +1893,13 @@ html[lang="zh-CN"] body {
 .task-overdue-row { background:#fffafa; }.task-detail-hero { padding:24px; border-radius:20px; background:linear-gradient(135deg,#102e46,#15765f); color:white; }.task-detail-hero h3 { margin:14px 0 8px; font-size:28px; }.task-detail-hero p { opacity:.85; }
 @media (max-width:1100px){.task-toolbar{grid-template-columns:1fr 1fr}.tasks-content .partner-metrics{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:650px){.task-toolbar{grid-template-columns:1fr}.tasks-content .partner-metrics{grid-template-columns:1fr}}
+.report-hero{align-items:center}.report-actions{display:flex;gap:10px}.light-button{color:#fff;border-color:rgba(255,255,255,.45);background:rgba(255,255,255,.1)}
+.report-meta,.report-filters{display:flex;justify-content:space-between;gap:12px;margin:16px 0;color:#6c7c89;font-size:12px}.report-filters{justify-content:flex-end}.report-filters select{min-width:190px;padding:12px;border:1px solid #dbe5ea;border-radius:12px;background:#fff}
+.report-section-title{margin:28px 0 12px}.report-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.report-kpis article,.performance-grid article{padding:20px;border:1px solid #e0e8ed;border-radius:18px;background:#fff}.report-kpis span,.performance-grid span{display:block;color:#70808e;font-size:12px}.report-kpis strong,.performance-grid strong{display:block;margin-top:8px;color:#16344a;font-size:24px}
+.report-performance{margin:20px 0;padding:24px;border-radius:22px;background:#f5f9fb}.performance-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}.reports-content .executive-intelligence{margin-top:24px}.report-table{margin-top:24px}
+@media(max-width:900px){.report-kpis,.performance-grid{grid-template-columns:repeat(2,1fr)}.report-hero{align-items:flex-start}.report-actions{flex-direction:column}}
+@media(max-width:600px){.report-kpis,.performance-grid{grid-template-columns:1fr}.report-meta,.report-filters{flex-direction:column}.report-filters select{width:100%}}
+@media print{.sidebar,.top,.report-actions,.report-filters{display:none!important}.app-shell{display:block}.main{margin:0}.content{padding:0}.reports-content{max-width:none}.report-hero{background:#173d54!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 
 @media (max-width: 800px) {
   .language-selector.compact {

@@ -6,6 +6,7 @@ import LeadsPage from "./pages/LeadsPage.jsx";
 import OpportunitiesPage from "./pages/OpportunitiesPage.jsx";
 import ContactsPage from "./pages/ContactsPage.jsx";
 import TasksPage from "./pages/TasksPage.jsx";
+import ReportsPage from "./pages/ReportsPage.jsx";
 import { INITIAL_LEADS } from "./data/leads.js";
 import { INITIAL_PARTNERS } from "./data/partners.js";
 import { INITIAL_OPPORTUNITIES } from "./data/opportunities.js";
@@ -297,6 +298,10 @@ export default function App() {
 
   if (activePage === "tasks") {
     return <TasksPage user={user} tasks={tasks} leads={leads} partners={partners} opportunities={opportunities} onSave={saveTask} onDelete={deleteTask} onNavigate={navigate} onLogout={logout} />;
+  }
+
+  if (activePage === "reports") {
+    return <ReportsPage user={user} leads={leads} partners={partners} opportunities={opportunities} tasks={tasks} onNavigate={navigate} onLogout={logout} />;
   }
 
   return (
