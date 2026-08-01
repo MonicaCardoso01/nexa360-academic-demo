@@ -5,14 +5,17 @@ import PartnersPage from "./pages/PartnersPage.jsx";
 import LeadsPage from "./pages/LeadsPage.jsx";
 import OpportunitiesPage from "./pages/OpportunitiesPage.jsx";
 import ContactsPage from "./pages/ContactsPage.jsx";
+import TasksPage from "./pages/TasksPage.jsx";
 import { INITIAL_LEADS } from "./data/leads.js";
 import { INITIAL_PARTNERS } from "./data/partners.js";
 import { INITIAL_OPPORTUNITIES } from "./data/opportunities.js";
+import { INITIAL_TASKS } from "./data/tasks.js";
 
 const STORAGE_KEY = "nexa360_partners_v1";
 const LEADS_KEY = "nexa360_leads_v1";
 const OPPORTUNITIES_KEY = "nexa360_opportunities_v1";
 const CONTACTS_KEY = "nexa360_contacts_v1";
+const TASKS_KEY = "nexa360_tasks_v1";
 const SESSION_TIMEOUT_MS = 15 * 60 * 1000;
 
 function loadLeads(){
@@ -43,6 +46,16 @@ function loadContacts() {
   try {
     const saved = localStorage.getItem(CONTACTS_KEY);
     const parsed = saved ? JSON.parse(saved) : null;
+    return Array.isArray(parsed) ? parsed : INITIAL_TASKS;
+  } catch {
+    return INITIAL_TASKS;
+  }
+}
+
+function loadTasks() {
+  try {
+    const saved = localStorage.getItem(TASKS_KEY);
+    const parsed = saved ? JSON.parse(saved) : null;
     return Array.isArray(parsed) ? parsed : [];
   } catch {
     return [];
@@ -67,6 +80,7 @@ export default function App() {
   const [leads, setLeads] = useState(loadLeads);
   const [opportunities, setOpportunities] = useState(loadOpportunities);
   const [contacts, setContacts] = useState(loadContacts);
+  const [tasks, setTasks] = useState(loadTasks);
   const [sessionExpired, setSessionExpired] = useState(false);
 
   useEffect(() => {
@@ -222,6 +236,25 @@ export default function App() {
     });
   }
 
+  function saveTask(task) {
+    setTasks((current) => {
+      const exists = current.some((item) => item.id === task.id);
+      const next = exists
+        ? current.map((item) => item.id === task.id ? task : item)
+        : [{ ...task, id: Date.now(), createdAt: new Date().toISOString().slice(0, 10) }, ...current];
+      persistRecords(TASKS_KEY, next);
+      return next;
+    });
+  }
+
+  function deleteTask(id) {
+    setTasks((current) => {
+      const next = current.filter((item) => item.id !== id);
+      persistRecords(TASKS_KEY, next);
+      return next;
+    });
+  }
+
 
   if (!user) {
     return <LoginPage sessionExpired={sessionExpired} onLogin={(nextUser) => { setSessionExpired(false); setUser(nextUser); }} />;
@@ -260,6 +293,10 @@ export default function App() {
 
   if (activePage === "contacts") {
     return <ContactsPage user={user} leads={leads} partners={partners} contacts={contacts} onSave={saveContact} onDelete={deleteContact} onNavigate={navigate} onLogout={logout} />;
+  }
+
+  if (activePage === "tasks") {
+    return <TasksPage user={user} tasks={tasks} leads={leads} partners={partners} opportunities={opportunities} onSave={saveTask} onDelete={deleteTask} onNavigate={navigate} onLogout={logout} />;
   }
 
   return (

@@ -3,6 +3,7 @@ import { LANGUAGES, translations } from "./translations.js";
 import { moduleTranslations } from "./moduleTranslations.js";
 import { communicationTranslations } from "./communicationTranslations.js";
 import { contactTranslations } from "./contactTranslations.js";
+import { taskTranslations } from "./taskTranslations.js";
 
 const STORAGE_KEY = "nexa360_language";
 const LanguageContext = createContext(null);
@@ -34,8 +35,8 @@ export function LanguageProvider({ children }) {
   const value = useMemo(() => {
     const locale = LANGUAGES.find((item) => item.code === language)?.locale || "pt-PT";
     const t = (key, variables) => {
-      const catalogue = { ...translations[language], ...moduleTranslations[language], ...communicationTranslations[language], ...contactTranslations[language] };
-      const fallbackCatalogue = { ...translations.pt, ...moduleTranslations.pt, ...communicationTranslations.pt, ...contactTranslations.pt };
+      const catalogue = { ...translations[language], ...moduleTranslations[language], ...communicationTranslations[language], ...contactTranslations[language], ...taskTranslations[language] };
+      const fallbackCatalogue = { ...translations.pt, ...moduleTranslations.pt, ...communicationTranslations.pt, ...contactTranslations.pt, ...taskTranslations.pt };
       const text = key.split(".").reduce((current, part) => current?.[part], catalogue);
       const fallback = key.split(".").reduce((current, part) => current?.[part], fallbackCatalogue);
       return interpolate(text || fallback || key, variables);
