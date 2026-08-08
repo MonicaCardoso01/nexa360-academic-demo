@@ -1,4 +1,4 @@
-# NEXA360 CRM Enterprise — v1.10.7
+# NEXA360 CRM Enterprise — v1.11.1
 
 Demonstração académica e comercial de um CRM multilingue orientado à gestão de relações, oportunidades e decisões comerciais.
 
@@ -13,6 +13,17 @@ Demonstração académica e comercial de um CRM multilingue orientado à gestão
 - interface em português, inglês, espanhol e chinês;
 - identidade visual, favicon e avatares fictícios da equipa;
 - persistência demonstrativa no `localStorage` do navegador.
+
+## Matriz de prioridades e delegação v1.11.1
+
+- matriz de Eisenhower reservada ao perfil de administração;
+- classificação editável por urgência, importância e possibilidade de delegação;
+- quadrantes Fazer agora, Planear, Delegar e Reavaliar/Arquivar;
+- colaboradores limitados às tarefas atribuídas ao respetivo nome;
+- migração automática dos registos anteriores e persistência no navegador;
+- experiência integral em português, inglês, espanhol e chinês.
+- cartões da matriz com edição direta e instruções de utilização;
+- criação de tarefas diretamente em cada quadrante, com classificação pré-preenchida.
 
 ## Otimização v1.10.6
 

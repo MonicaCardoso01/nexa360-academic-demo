@@ -68,7 +68,15 @@ function loadTasks() {
   try {
     const saved = localStorage.getItem(TASKS_KEY);
     const parsed = saved ? JSON.parse(saved) : null;
-    return normalizeRecords(TASKS_KEY, Array.isArray(parsed) ? parsed : INITIAL_TASKS);
+    const records = normalizeRecords(TASKS_KEY, Array.isArray(parsed) ? parsed : INITIAL_TASKS);
+    const normalized = records.map((task) => ({
+      ...task,
+      urgent: typeof task.urgent === "boolean" ? task.urgent : task.priority === "high",
+      important: typeof task.important === "boolean" ? task.important : task.priority !== "low",
+      delegable: typeof task.delegable === "boolean" ? task.delegable : task.owner !== "Mônica Cardoso"
+    }));
+    if (JSON.stringify(normalized) !== JSON.stringify(records)) localStorage.setItem(TASKS_KEY, JSON.stringify(normalized));
+    return normalized;
   } catch {
     return INITIAL_TASKS;
   }
