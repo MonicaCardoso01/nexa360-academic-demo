@@ -1,45 +1,44 @@
-# NEXA360 CRM Enterprise — v1.4 Gestão de Oportunidades
+# NEXA360 CRM Enterprise — v1.10.6
 
-## Novo módulo funcional
+Demonstração académica e comercial de um CRM multilingue orientado à gestão de relações, oportunidades e decisões comerciais.
 
-- 8 leads fictícios de Portugal, Espanha, França, Alemanha e Itália;
-- criar, visualizar, editar e eliminar leads;
-- pesquisa por nome, empresa ou email;
-- filtros por estado, país, origem e prioridade;
-- ordenação por nome, criação e último contacto;
-- atualização de estado e acompanhamento;
-- conversão simples em oportunidade;
-- validação de nome, empresa e email/telefone;
-- dados guardados no Local Storage;
-- permissões de Administradora e Colaborador;
-- Centro de Comando e Parceiros preservados.
+## Módulos funcionais
 
-## Gestão de Oportunidades
+- Centro de Comando com prioridades, métricas, meta comercial e inteligência executiva;
+- gestão de leads, parceiros, oportunidades, contactos e tarefas;
+- termómetro e histórico de relacionamento editáveis;
+- relatórios executivos, exportação CSV e impressão em PDF;
+- contactos profissionais por Outlook, WhatsApp e telefone;
+- definições, perfil persistente e cópia de segurança JSON;
+- interface em português, inglês, espanhol e chinês;
+- identidade visual, favicon e avatares fictícios da equipa;
+- persistência demonstrativa no `localStorage` do navegador.
 
-- criação automática ao converter um lead;
-- criação, consulta, edição e eliminação de oportunidades;
-- valor estimado e pipeline ponderado;
-- probabilidade de fecho;
-- etapas de Qualificação, Descoberta, Proposta, Negociação e Fecho;
-- estados Aberta, Ganha e Perdida;
-- filtros, pesquisa e ordenação;
-- métricas e pipeline atualizados no Centro de Comando;
-- dados guardados no Local Storage.
+## Otimização v1.10.6
 
-## Executar
+As páginas são carregadas sob demanda com `React.lazy` e `Suspense`. Os gráficos e a respetiva biblioteca deixam de integrar o ficheiro JavaScript inicial, reduzindo o primeiro carregamento e eliminando o aviso de blocos superiores a 500 kB.
+
+## Executar localmente
+
+Requisitos: Node.js 20 ou superior e npm 10 ou superior.
 
 ```bash
 npm install
 npm run dev
 ```
 
-Abra o endereço indicado pelo Vite e use uma palavra-passe de demonstração como `1234`.
+Abra o endereço indicado pelo Vite. Esta versão utiliza acesso exclusivamente demonstrativo.
 
-## Criar a versão de produção
+## Validar e criar a versão de produção
 
 ```bash
+npm audit --audit-level=high
 npm run build
 npm run preview
 ```
 
-A configuração usa caminhos relativos, compatíveis com execução local, Vercel e GitHub Pages.
+A configuração utiliza caminhos relativos, compatíveis com execução local, Vercel e GitHub Pages.
+
+## Segurança e dados
+
+Esta é uma aplicação estática sem autenticação real, servidor privado ou base de dados. Utilize exclusivamente dados fictícios. Consulte [SECURITY.md](SECURITY.md) antes de publicar ou adaptar o projeto.

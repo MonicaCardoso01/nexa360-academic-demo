@@ -3,6 +3,7 @@ import AppLayout from"../layouts/AppLayout.jsx";
 import{useLanguage}from"../i18n/LanguageContext.jsx";
 
 const SETTINGS_KEY="nexa360_settings_v1",TARGET_KEY="nexa360_monthly_commercial_target",PROFILE_KEY="nexa360_profile_v1";
+const APP_VERSION = "1.10.6";
 const defaults={companyName:"NEXA360",taxId:"999999990",country:"Portugal",city:"Porto",website:"https://nexa360.pt",monthlyTarget:100000,currency:"EUR",fiscalYear:"january",notifications:true,compact:false};
 function load(){try{return{...defaults,...JSON.parse(localStorage.getItem(SETTINGS_KEY)||"{}"),monthlyTarget:Number(localStorage.getItem(TARGET_KEY))||100000};}catch{return defaults;}}
 export default function SettingsPage({user,onUpdateUser,leads,partners,opportunities,contacts,tasks,onNavigate,onLogout}){
@@ -10,10 +11,10 @@ export default function SettingsPage({user,onUpdateUser,leads,partners,opportuni
  useEffect(()=>{document.body.classList.toggle("nexa-compact",settings.compact);return()=>document.body.classList.remove("nexa-compact");},[settings.compact]);
  const set=(key,value)=>setSettings(x=>({...x,[key]:value}));
  function save(event){event.preventDefault();if(!profile.name.trim()||!/^\S+@\S+\.\S+$/.test(profile.email))return setMessage(t("settings.required"));if(Number(settings.monthlyTarget)<=0)return setMessage(t("settings.targetRequired"));const savedProfile={name:profile.name.trim(),email:profile.email.trim()};localStorage.setItem(SETTINGS_KEY,JSON.stringify(settings));localStorage.setItem(TARGET_KEY,String(Number(settings.monthlyTarget)));localStorage.setItem(PROFILE_KEY,JSON.stringify(savedProfile));onUpdateUser({...user,...savedProfile});setMessage(t("settings.saved"));}
- function exportData(){const payload={exportedAt:new Date().toISOString(),application:"NEXA360 CRM Enterprise Demo",version:"1.9.3",settings,records:{leads,partners,opportunities,contacts,tasks}};const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:"application/json"}));const a=document.createElement("a");a.href=url;a.download=`nexa360-demo-backup-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(url);setMessage(t("settings.exported"));}
+ function exportData(){const payload={exportedAt:new Date().toISOString(),application:"NEXA360 CRM Enterprise Demo",version:APP_VERSION,settings,records:{leads,partners,opportunities,contacts,tasks}};const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:"application/json"}));const a=document.createElement("a");a.href=url;a.download=`nexa360-demo-backup-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(url);setMessage(t("settings.exported"));}
  const money=new Intl.NumberFormat(languages.find(x=>x.code===language)?.locale||"pt-PT",{style:"currency",currency:"EUR",maximumFractionDigits:0}).format(Number(settings.monthlyTarget)||0);
  return <AppLayout user={user} activePage="settings" onNavigate={onNavigate} onLogout={onLogout} title={t("settings.title")}><div className="content settings-content">
-  <section className="partners-hero"><div><p className="eyebrow light">{t("settings.eyebrow")}</p><h2>{t("settings.heading")}</h2><p>{t("settings.description")}</p></div><div className="settings-version"><small>{t("settings.version")}</small><strong>v1.9.3</strong></div></section>
+  <section className="partners-hero"><div><p className="eyebrow light">{t("settings.eyebrow")}</p><h2>{t("settings.heading")}</h2><p>{t("settings.description")}</p></div><div className="settings-version"><small>{t("settings.version")}</small><strong>v{APP_VERSION}</strong></div></section>
   <aside className="settings-warning"><span>🛡</span><div><strong>{t("settings.publicWarning")}</strong><p>{t("settings.publicText")}</p></div></aside>
   <div className="settings-layout"><nav className="settings-nav">{[["profile","◉"],["company","◇"],["commercial","↗"],["preferences","⚙"],["data","▥"]].map(([id,icon])=><button key={id} className={section===id?"active":""} onClick={()=>{setSection(id);setMessage("");}}><span>{icon}</span>{t(`settings.${id}`)}</button>)}</nav>
   <form className="settings-panel" onSubmit={save}>

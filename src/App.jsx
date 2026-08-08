@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import LoginPage from "./pages/LoginPage.jsx";
-import CommandCenterPage from "./pages/CommandCenterPage.jsx";
-import PartnersPage from "./pages/PartnersPage.jsx";
-import LeadsPage from "./pages/LeadsPage.jsx";
-import OpportunitiesPage from "./pages/OpportunitiesPage.jsx";
-import ContactsPage from "./pages/ContactsPage.jsx";
-import TasksPage from "./pages/TasksPage.jsx";
-import ReportsPage from "./pages/ReportsPage.jsx";
-import SettingsPage from "./pages/SettingsPage.jsx";
 import { INITIAL_LEADS } from "./data/leads.js";
 import { INITIAL_PARTNERS } from "./data/partners.js";
 import { INITIAL_OPPORTUNITIES } from "./data/opportunities.js";
 import { INITIAL_TASKS } from "./data/tasks.js";
+
+const CommandCenterPage = lazy(() => import("./pages/CommandCenterPage.jsx"));
+const PartnersPage = lazy(() => import("./pages/PartnersPage.jsx"));
+const LeadsPage = lazy(() => import("./pages/LeadsPage.jsx"));
+const OpportunitiesPage = lazy(() => import("./pages/OpportunitiesPage.jsx"));
+const ContactsPage = lazy(() => import("./pages/ContactsPage.jsx"));
+const TasksPage = lazy(() => import("./pages/TasksPage.jsx"));
+const ReportsPage = lazy(() => import("./pages/ReportsPage.jsx"));
+const SettingsPage = lazy(() => import("./pages/SettingsPage.jsx"));
 
 const STORAGE_KEY = "nexa360_partners_v1";
 const LEADS_KEY = "nexa360_leads_v1";
@@ -80,6 +81,15 @@ function persistRecords(key, records) {
     console.error(`NEXA360 storage failure for ${key}`, error);
     return false;
   }
+}
+
+function PageLoading() {
+  return (
+    <main className="page-loading" role="status" aria-live="polite">
+      <span className="page-loading-spinner" aria-hidden="true" />
+      <strong>NEXA360</strong>
+    </main>
+  );
 }
 
 export default function App() {
@@ -270,12 +280,12 @@ export default function App() {
     return <LoginPage sessionExpired={sessionExpired} onLogin={(nextUser) => { setSessionExpired(false); setUser(nextUser); }} />;
   }
 
-  if (activePage === "leads") {
-    return <LeadsPage user={user} leads={leads} onSave={saveLead} onDelete={deleteLead} onConvert={convertLead} onNavigate={navigate} onLogout={logout} />;
-  }
+  let page;
 
-  if (activePage === "partners") {
-    return (
+  if (activePage === "leads") {
+    page = <LeadsPage user={user} leads={leads} onSave={saveLead} onDelete={deleteLead} onConvert={convertLead} onNavigate={navigate} onLogout={logout} />;
+  } else if (activePage === "partners") {
+    page = (
       <PartnersPage
         user={user}
         partners={partners}
@@ -286,10 +296,8 @@ export default function App() {
         onLogout={logout}
       />
     );
-  }
-
-  if (activePage === "opportunities") {
-    return (
+  } else if (activePage === "opportunities") {
+    page = (
       <OpportunitiesPage
         user={user}
         opportunities={opportunities}
@@ -299,31 +307,25 @@ export default function App() {
         onLogout={logout}
       />
     );
+  } else if (activePage === "contacts") {
+    page = <ContactsPage user={user} leads={leads} partners={partners} contacts={contacts} onSave={saveContact} onDelete={deleteContact} onNavigate={navigate} onLogout={logout} />;
+  } else if (activePage === "tasks") {
+    page = <TasksPage user={user} tasks={tasks} leads={leads} partners={partners} opportunities={opportunities} onSave={saveTask} onDelete={deleteTask} onNavigate={navigate} onLogout={logout} />;
+  } else if (activePage === "reports") {
+    page = <ReportsPage user={user} leads={leads} partners={partners} opportunities={opportunities} tasks={tasks} onNavigate={navigate} onLogout={logout} />;
+  } else if (activePage === "settings") {
+    page = <SettingsPage user={user} onUpdateUser={setUser} leads={leads} partners={partners} opportunities={opportunities} contacts={contacts} tasks={tasks} onNavigate={navigate} onLogout={logout} />;
+  } else {
+    page = (
+      <CommandCenterPage
+        user={user}
+        leads={leads}
+        opportunities={opportunities}
+        onLogout={logout}
+        onNavigate={navigate}
+      />
+    );
   }
 
-  if (activePage === "contacts") {
-    return <ContactsPage user={user} leads={leads} partners={partners} contacts={contacts} onSave={saveContact} onDelete={deleteContact} onNavigate={navigate} onLogout={logout} />;
-  }
-
-  if (activePage === "tasks") {
-    return <TasksPage user={user} tasks={tasks} leads={leads} partners={partners} opportunities={opportunities} onSave={saveTask} onDelete={deleteTask} onNavigate={navigate} onLogout={logout} />;
-  }
-
-  if (activePage === "reports") {
-    return <ReportsPage user={user} leads={leads} partners={partners} opportunities={opportunities} tasks={tasks} onNavigate={navigate} onLogout={logout} />;
-  }
-
-  if (activePage === "settings") {
-    return <SettingsPage user={user} onUpdateUser={setUser} leads={leads} partners={partners} opportunities={opportunities} contacts={contacts} tasks={tasks} onNavigate={navigate} onLogout={logout} />;
-  }
-
-  return (
-    <CommandCenterPage
-      user={user}
-      leads={leads}
-      opportunities={opportunities}
-      onLogout={logout}
-      onNavigate={navigate}
-    />
-  );
+  return <Suspense fallback={<PageLoading />}>{page}</Suspense>;
 }
