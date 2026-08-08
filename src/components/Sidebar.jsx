@@ -22,7 +22,7 @@ export default function Sidebar({ user, activePage, onNavigate, onLogout }) {
     <aside className="sidebar">
       <Logo compact />
 
-      <nav aria-label="Menu principal">
+      <nav aria-label={t("accessibility.mainNavigation")}>
         <p>{t("menu.section")}</p>
 
         {MENU.map(([id, icon, future]) => {
@@ -32,6 +32,7 @@ export default function Sidebar({ user, activePage, onNavigate, onLogout }) {
             type="button"
             key={id}
             className={activePage === id ? "active" : ""}
+            aria-current={activePage === id ? "page" : undefined}
             onClick={() => !future && onNavigate(id)}
             title={future ? `${label} — ${t("common.future")}` : label}
           >
@@ -49,7 +50,7 @@ export default function Sidebar({ user, activePage, onNavigate, onLogout }) {
           <b>{user.name}</b>
           <small>{role}</small>
         </div>
-        <button type="button" onClick={onLogout} title={t("common.logout")}>↪</button>
+        <button type="button" onClick={onLogout} title={t("common.logout")} aria-label={t("accessibility.logout")}>↪</button>
       </div>
     </aside>
   );

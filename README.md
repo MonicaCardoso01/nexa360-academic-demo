@@ -1,4 +1,4 @@
-# NEXA360 CRM Enterprise — v1.10.6
+# NEXA360 CRM Enterprise — v1.10.7
 
 Demonstração académica e comercial de um CRM multilingue orientado à gestão de relações, oportunidades e decisões comerciais.
 
@@ -17,6 +17,15 @@ Demonstração académica e comercial de um CRM multilingue orientado à gestão
 ## Otimização v1.10.6
 
 As páginas são carregadas sob demanda com `React.lazy` e `Suspense`. Os gráficos e a respetiva biblioteca deixam de integrar o ficheiro JavaScript inicial, reduzindo o primeiro carregamento e eliminando o aviso de blocos superiores a 500 kB.
+
+## Responsividade e acessibilidade v1.10.7
+
+- ligação para saltar diretamente ao conteúdo principal;
+- foco de teclado visível e alvos tácteis reforçados em ecrãs pequenos;
+- navegação e seleção de idioma com estados acessíveis;
+- diálogos identificados, com foco contido, fecho pela tecla `Escape` e reposição do foco;
+- compatibilidade com preferência por movimento reduzido e modo de alto contraste;
+- melhorias de leitura de tabelas, textos longos e ações em telemóvel.
 
 ## Executar localmente
 

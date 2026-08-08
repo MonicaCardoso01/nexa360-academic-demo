@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import AppLayout from "../layouts/AppLayout.jsx";
 import CommunicationActions from "../components/CommunicationActions.jsx";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
+import { useDialogAccessibility } from "../utils/useDialogAccessibility.js";
 
 const EMPTY = { id: null, originType: "contact", name: "", company: "", role: "", email: "", phone: "", country: "Portugal", city: "", owner: "Mônica Cardoso", notes: "" };
 
@@ -30,6 +31,7 @@ function combinedContacts(leads, partners, standalone) {
 
 function ContactModal({ contact, mode, onClose, onSave, onDelete, canEdit, t }) {
   const [form, setForm] = useState(contact || EMPTY);
+  const dialogRef = useDialogAccessibility(onClose);
   const editing = mode === "new" || mode === "edit";
   const set = (key, value) => setForm((current) => ({ ...current, [key]: value }));
   const sourceLabel = t(`contacts.source${form.originType === "partner" ? "Partner" : form.originType === "lead" ? "Lead" : "Contact"}`);
@@ -43,8 +45,8 @@ function ContactModal({ contact, mode, onClose, onSave, onDelete, canEdit, t }) 
     onClose();
   }
 
-  return <div className="modal-backdrop"><section className="partner-modal contact-modal">
-    <header className="modal-header"><div><p className="eyebrow">{editing ? t("contacts.contactManagement") : t("contacts.contact360")}</p><h2>{mode === "new" ? t("contacts.new").replace("+ ", "") : mode === "edit" ? t("contacts.editContact") : form.name}</h2></div><button type="button" className="close-button" onClick={onClose}>×</button></header>
+  return <div className="modal-backdrop" role="presentation"><section ref={dialogRef} className="partner-modal contact-modal" role="dialog" aria-modal="true" aria-label={mode === "new" ? t("contacts.new").replace("+ ", "") : mode === "edit" ? t("contacts.editContact") : form.name} tabIndex="-1">
+    <header className="modal-header"><div><p className="eyebrow">{editing ? t("contacts.contactManagement") : t("contacts.contact360")}</p><h2>{mode === "new" ? t("contacts.new").replace("+ ", "") : mode === "edit" ? t("contacts.editContact") : form.name}</h2></div><button type="button" className="close-button" aria-label={t("accessibility.closeDialog")} onClick={onClose}>×</button></header>
     {editing ? <form className="partner-form" onSubmit={submit}>
       <div className="form-section"><h3>{t("contacts.details")}</h3><div className="form-grid">
         <label><span>{t("contacts.name")}</span><input maxLength="100" value={form.name} onChange={(e) => set("name", e.target.value)} /></label>

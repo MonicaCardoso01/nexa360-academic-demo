@@ -4,6 +4,7 @@ import { INITIAL_LEADS } from "./data/leads.js";
 import { INITIAL_PARTNERS } from "./data/partners.js";
 import { INITIAL_OPPORTUNITIES } from "./data/opportunities.js";
 import { INITIAL_TASKS } from "./data/tasks.js";
+import { useLanguage } from "./i18n/LanguageContext.jsx";
 
 const CommandCenterPage = lazy(() => import("./pages/CommandCenterPage.jsx"));
 const PartnersPage = lazy(() => import("./pages/PartnersPage.jsx"));
@@ -84,10 +85,11 @@ function persistRecords(key, records) {
 }
 
 function PageLoading() {
+  const { t } = useLanguage();
   return (
     <main className="page-loading" role="status" aria-live="polite">
       <span className="page-loading-spinner" aria-hidden="true" />
-      <strong>NEXA360</strong>
+      <strong>{t("accessibility.loading")}</strong>
     </main>
   );
 }

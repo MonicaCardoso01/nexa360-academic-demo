@@ -1,6 +1,7 @@
 import RelationshipScore from "../components/RelationshipScore.jsx";
 import BrandSymbol from "../components/BrandSymbol.jsx";
 import RelationshipTimeline from "../components/RelationshipTimeline.jsx";
+import { useDialogAccessibility } from "../utils/useDialogAccessibility.js";
 import React, { useEffect, useMemo, useState } from "react";
 import AppLayout from "../layouts/AppLayout.jsx";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
@@ -83,6 +84,7 @@ function relationshipMetrics(partner) {
 
 function PartnerModal({ partner, mode, onClose, onSave, onDelete, canEdit, t, locale, language }) {
   const [form, setForm] = useState(partner || EMPTY_PARTNER);
+  const dialogRef = useDialogAccessibility(onClose);
   const editing = mode === "edit" || mode === "new";
   const displayForm = editing ? form : localizePartner(form, language);
   const title = mode === "new"
@@ -117,7 +119,7 @@ function PartnerModal({ partner, mode, onClose, onSave, onDelete, canEdit, t, lo
 
   return (
     <div className="modal-backdrop" role="presentation">
-      <section className="partner-modal" role="dialog" aria-modal="true" aria-label={title}>
+      <section ref={dialogRef} className="partner-modal" role="dialog" aria-modal="true" aria-label={title} tabIndex="-1">
         <header className="modal-header">
           <div>
             <p className="eyebrow">
@@ -125,7 +127,7 @@ function PartnerModal({ partner, mode, onClose, onSave, onDelete, canEdit, t, lo
             </p>
             <h2>{title}</h2>
           </div>
-          <button type="button" className="close-button" onClick={onClose}>×</button>
+          <button type="button" className="close-button" aria-label={t("accessibility.closeDialog")} onClick={onClose}>×</button>
         </header>
 
         {editing ? (

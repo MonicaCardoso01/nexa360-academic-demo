@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import AppLayout from "../layouts/AppLayout.jsx";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { localizeOpportunity } from "../i18n/opportunityRecordTranslations.js";
+import { useDialogAccessibility } from "../utils/useDialogAccessibility.js";
 import {
   OPPORTUNITY_STAGES,
   OPPORTUNITY_STATUSES
@@ -35,6 +36,7 @@ const EMPTY = {
 
 function OpportunityModal({ item, mode, canEdit, onClose, onSave, onDelete, t, locale, language }) {
   const [form, setForm] = useState(item || EMPTY);
+  const dialogRef = useDialogAccessibility(onClose);
   const editing = mode !== "view";
   const displayForm = editing ? form : localizeOpportunity(form, language);
   const set = (key, value) => setForm((current) => ({ ...current, [key]: value }));
@@ -53,14 +55,14 @@ function OpportunityModal({ item, mode, canEdit, onClose, onSave, onDelete, t, l
   }
 
   return (
-    <div className="modal-backdrop">
-      <section className="partner-modal opportunity-modal">
+    <div className="modal-backdrop" role="presentation">
+      <section ref={dialogRef} className="partner-modal opportunity-modal" role="dialog" aria-modal="true" aria-label={mode === "new" ? t("opportunities.newOpportunity").replace("+ ", "") : mode === "edit" ? t("opportunities.editOpportunity") : displayForm.title} tabIndex="-1">
         <header className="modal-header">
           <div>
             <p className="eyebrow">{editing ? t("opportunities.commercialPipeline") : t("opportunities.opportunity360")}</p>
             <h2>{mode === "new" ? t("opportunities.newOpportunity").replace("+ ", "") : mode === "edit" ? t("opportunities.editOpportunity") : displayForm.title}</h2>
           </div>
-          <button className="close-button" onClick={onClose}>×</button>
+          <button type="button" className="close-button" aria-label={t("accessibility.closeDialog")} onClick={onClose}>×</button>
         </header>
 
         {editing ? (

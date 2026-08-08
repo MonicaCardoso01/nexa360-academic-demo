@@ -18,6 +18,7 @@ export default function AppLayout({
 
   return (
     <main className="shell">
+      <a className="skip-link" href="#main-content">{t("accessibility.skipToContent")}</a>
       <Sidebar
         user={user}
         activePage={activePage}
@@ -25,7 +26,7 @@ export default function AppLayout({
         onLogout={onLogout}
       />
 
-      <section className="main">
+      <section className="main" id="main-content" tabIndex="-1">
         <header className="top">
           <div>
             <small>NEXA360 / {translatedTitle}</small>

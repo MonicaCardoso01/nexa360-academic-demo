@@ -3,7 +3,7 @@ import AppLayout from"../layouts/AppLayout.jsx";
 import{useLanguage}from"../i18n/LanguageContext.jsx";
 
 const SETTINGS_KEY="nexa360_settings_v1",TARGET_KEY="nexa360_monthly_commercial_target",PROFILE_KEY="nexa360_profile_v1";
-const APP_VERSION = "1.10.6";
+const APP_VERSION = "1.10.7";
 const defaults={companyName:"NEXA360",taxId:"999999990",country:"Portugal",city:"Porto",website:"https://nexa360.pt",monthlyTarget:100000,currency:"EUR",fiscalYear:"january",notifications:true,compact:false};
 function load(){try{return{...defaults,...JSON.parse(localStorage.getItem(SETTINGS_KEY)||"{}"),monthlyTarget:Number(localStorage.getItem(TARGET_KEY))||100000};}catch{return defaults;}}
 export default function SettingsPage({user,onUpdateUser,leads,partners,opportunities,contacts,tasks,onNavigate,onLogout}){

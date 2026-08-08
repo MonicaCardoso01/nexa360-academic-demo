@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import AppLayout from "../layouts/AppLayout.jsx";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
+import { useDialogAccessibility } from "../utils/useDialogAccessibility.js";
 
 const TODAY = () => new Date().toISOString().slice(0, 10);
 const EMPTY = { id:null, title:"", description:"", dueDate:TODAY(), priority:"medium", status:"pending", owner:"Mônica Cardoso", relatedType:"none", relatedId:"", relatedLabel:"", notes:"" };
@@ -14,6 +15,7 @@ function recordsFor(type, leads, partners, opportunities) {
 
 function TaskModal({ task, mode, records, onClose, onSave, onDelete, t }) {
   const [form, setForm] = useState(task || EMPTY);
+  const dialogRef = useDialogAccessibility(onClose);
   const editing = mode !== "view";
   const set = (key, value) => setForm((current) => ({ ...current, [key]:value }));
   const related = records(form.relatedType);
@@ -25,7 +27,7 @@ function TaskModal({ task, mode, records, onClose, onSave, onDelete, t }) {
     onSave({ ...form, relatedLabel:selected?.label || "" });
     onClose();
   }
-  return <div className="modal-backdrop"><section className="partner-modal task-modal"><header className="modal-header"><div><p className="eyebrow">{t("tasks.details")}</p><h2>{mode === "new" ? t("tasks.new").replace("+ ", "") : form.title}</h2></div><button className="close-button" onClick={onClose}>×</button></header>
+  return <div className="modal-backdrop" role="presentation"><section ref={dialogRef} className="partner-modal task-modal" role="dialog" aria-modal="true" aria-label={mode === "new" ? t("tasks.new").replace("+ ", "") : form.title} tabIndex="-1"><header className="modal-header"><div><p className="eyebrow">{t("tasks.details")}</p><h2>{mode === "new" ? t("tasks.new").replace("+ ", "") : form.title}</h2></div><button type="button" className="close-button" aria-label={t("accessibility.closeDialog")} onClick={onClose}>×</button></header>
     {editing ? <form className="partner-form" onSubmit={submit}><div className="form-section"><div className="form-grid">
       <label><span>{t("tasks.titleField")}</span><input maxLength="140" value={form.title} onChange={(e)=>set("title",e.target.value)} /></label>
       <label><span>{t("tasks.owner")}</span><input maxLength="100" value={form.owner} onChange={(e)=>set("owner",e.target.value)} /></label>

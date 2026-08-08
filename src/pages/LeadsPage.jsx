@@ -5,18 +5,20 @@ import {LEAD_PRIORITIES,LEAD_SOURCES,LEAD_STATUSES} from "../data/leads.js";
 import {useLanguage} from "../i18n/LanguageContext.jsx";
 import {localizeLead} from "../i18n/leadRecordTranslations.js";
 import CommunicationActions from "../components/CommunicationActions.jsx";
+import {useDialogAccessibility} from "../utils/useDialogAccessibility.js";
 
 const EMPTY={name:"",company:"",role:"",email:"",phone:"",country:"Portugal",city:"",source:"Website",interest:"",status:"Novo",priority:"Média",owner:"Mônica Cardoso",createdAt:new Date().toISOString().slice(0,10),lastContact:"",nextAction:"",notes:""};
 const slug=(v)=>v.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replaceAll(" ","-");
 
 function LeadModal({item,mode,onClose,onSave,onDelete,onConvert,canEdit,t,language}){
  const [form,setForm]=useState(item||EMPTY); const editing=mode!=="view";
+ const dialogRef=useDialogAccessibility(onClose);
  const displayForm=editing?form:localizeLead(form,language);
  const set=(k,v)=>setForm(x=>({...x,[k]:v}));
  const statusLabel=x=>t(`leads.statuses.${x}`); const priorityLabel=x=>t(`leads.priorities.${x}`); const sourceLabel=x=>t(`leads.sources.${x}`);
  function submit(e){e.preventDefault();if(!form.name.trim())return alert(t("leads.nameRequired"));if(!form.company.trim())return alert(t("leads.companyRequired"));if(!form.email.trim()&&!form.phone.trim())return alert(t("leads.contactRequired"));if(form.email&&!/^\S+@\S+\.\S+$/.test(form.email))return alert(t("leads.invalidEmail"));onSave(form);onClose();}
- return <div className="modal-backdrop"><section className="partner-modal lead-modal">
-  <header className="modal-header"><div><p className="eyebrow">{editing?t("leads.leadManagement"):t("leads.lead360")}</p><h2>{mode==="new"?t("leads.newLead").replace("+ ",""):mode==="edit"?t("leads.editLead"):form.name}</h2></div><button className="close-button" onClick={()=>onClose()}>×</button></header>
+ return <div className="modal-backdrop" role="presentation"><section ref={dialogRef} className="partner-modal lead-modal" role="dialog" aria-modal="true" aria-label={mode==="new"?t("leads.newLead").replace("+ ",""):mode==="edit"?t("leads.editLead"):form.name} tabIndex="-1">
+  <header className="modal-header"><div><p className="eyebrow">{editing?t("leads.leadManagement"):t("leads.lead360")}</p><h2>{mode==="new"?t("leads.newLead").replace("+ ",""):mode==="edit"?t("leads.editLead"):form.name}</h2></div><button type="button" className="close-button" aria-label={t("accessibility.closeDialog")} onClick={()=>onClose()}>×</button></header>
   {editing?<form className="partner-form" onSubmit={submit}>
    <div className="form-section"><h3>{t("leads.personalCompany")}</h3><div className="form-grid">
     <label><span>{t("leads.fullName")}</span><input value={form.name} onChange={e=>set("name",e.target.value)}/></label>

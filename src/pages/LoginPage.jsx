@@ -76,10 +76,10 @@ export default function LoginPage({ onLogin, sessionExpired = false }) {
           </header>
 
           <div className="profiles">
-            <button type="button" className={profileKey === "admin" ? "selected" : ""} onClick={() => choose("admin")}>
+            <button type="button" className={profileKey === "admin" ? "selected" : ""} aria-pressed={profileKey === "admin"} onClick={() => choose("admin")}>
               ♛ <span><b>{t("common.admin")}</b><small>{t("login.adminDetail")}</small></span>
             </button>
-            <button type="button" className={profileKey === "collaborator" ? "selected" : ""} onClick={() => choose("collaborator")}>
+            <button type="button" className={profileKey === "collaborator" ? "selected" : ""} aria-pressed={profileKey === "collaborator"} onClick={() => choose("collaborator")}>
               ♟ <span><b>{t("common.collaborator")}</b><small>{t("login.collaboratorDetail")}</small></span>
             </button>
           </div>
@@ -100,8 +100,8 @@ export default function LoginPage({ onLogin, sessionExpired = false }) {
               <label><input type="checkbox" defaultChecked /> {t("login.remember")}</label>
               <button type="button">{t("login.forgot")}</button>
             </div>
-            <button className="enter">{t("login.enterAs", { role })}</button>
-            <p className="feedback">{message || (sessionExpired ? t("security.sessionExpired") : t("login.demo"))}</p>
+            <button type="submit" className="enter">{t("login.enterAs", { role })}</button>
+            <p className="feedback" role="status" aria-live="polite">{message || (sessionExpired ? t("security.sessionExpired") : t("login.demo"))}</p>
           </form>
           <aside className="security-login-notice" role="note">
             <strong>🛡 {t("security.demoTitle")}</strong>
